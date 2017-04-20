@@ -14,7 +14,7 @@ There are several methods to solve it but the most convenient one I found is to 
 LD_LIBRARY_PATH=/path/to/your/unzipped/lib /path/to/your/unzipped/lib/ld-x.xx.so /path/to/your/python/bin/python
 ```
 
-Incase you don't have a newer linux box, here is a [zipped libc] for x86-64 platform, I tried it on centos(kernel version 2.6.37) and it worked.
+In case you don't have a newer linux box, here is a [zipped libc] for x86-64 platform, I tried it on centos(kernel version 2.6.37) and it worked.
 
 
 [zipped libc]: /assets/myglibc.tar.gz
