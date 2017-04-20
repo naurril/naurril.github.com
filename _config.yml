@@ -16,7 +16,7 @@
 title: Naurril's Blog
 email: naurril@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-  Naurril's notes, thoughts about bigdata & ML.
+  Naurril's notes, thoughts about bigdata & ML & PL.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "http://naurril.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: naurril
