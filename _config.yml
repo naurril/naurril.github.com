@@ -1,0 +1,18 @@
+# Site settings
+title: Naurril blog
+email:
+description: "I an nobody"
+baseurl: ""
+url: "http://naurril.github.io"
+twitter_username: naurril
+github_username:  naurril
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+highlighter: rouge
+kramdown:
+  input: GFM
+  auto_ids: true
+  syntax_highlighter: rouge
