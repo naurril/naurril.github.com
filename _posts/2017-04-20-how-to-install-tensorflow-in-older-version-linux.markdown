@@ -3,6 +3,7 @@ layout: post
 title: "How to install tensorflow in old version linux"
 date: 2017-04-20
 categories: howtos
+commentIssueId: 2
 ---
 Prebuilt Tensorflow(1.0.1) uses libc runtime v2.17 or above, if you install it on earlier linux version, like ubuntu 12.04, you will get the following err message when importing tensorflow in python(2.7):
 ```

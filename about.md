@@ -2,7 +2,7 @@
 layout: page
 title: About
 permalink: /about/
-commentsIssueId: 1
+commentIssueId: 1
 ---
 
 {% include mathjs %}
