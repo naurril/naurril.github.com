@@ -79,10 +79,6 @@ For c/c++ part, you can do with the following 2 steps:
 	0x00007ffff6e1d903 in select () from /lib64/libc.so.6
 	(gdb) b TF_ExtendGraph
 	Breakpoint 1 at 0x7fffdd653a90: file tensorflow/c/c_api.cc, line 351.
-	(gdb) r
-	The program being debugged has been started already.
-	Start it from the beginning? (y or n) n
-	Program not restarted.
 	(gdb) c
 	Continuing.
 	sess.run(c)
