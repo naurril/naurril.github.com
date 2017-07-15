@@ -1,0 +1,721 @@
+\documentclass[10pt,a4paper]{book}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\title{math & ml notes}
+\begin{document}
+
+
+
+\chapter{Linear models}
+\section{Problem Description}
+
+Input data \textbf{x} N*M matrix, N data points, each has M dimension, or M features
+\\
+Target value \textbf{t}
+\\
+predict value \textbf{y(x)}
+\\
+Sometimes we use input transformation, to replace x with $\phi(x)$ (basis function), a N*D matrix, also called design matrix $\Phi$. Design matrix is often fixed non-linear functions of input variables, since it would be not necessary if it's linear(parameter vector w can cover this condition). 
+\\
+
+Candidate of basis function
+\begin{itemize}
+	\item powers of x, $x^j$
+	\item Gaussian basis function, $\phi(x) = exp\{- \frac {(x-\mu_j)^2} {2s^2}\}$, where $\mu_j$ governs the location, and $s$ governs the space scale.
+	\item logistic sigmoidal $\phi_j(x)=\sigma(\frac {x-\mu_j} s)$, where $\sigma(a) = \frac 1 {1+exp(-a)}$
+	\item tanh $tanh(x) = \frac {e^x - e^{-x}} {e^x + e^{-x}}$ = $2\sigma(2x)-1$
+	\item fourier basis (warelet)
+\end{itemize}
+
+\section{Least squares}
+model
+$$y = w^Tx$$
+
+error function (squared error)
+$$C(x) = (w^T\Phi - t)^T(w^T\Phi - t)$$
+
+gradient w.r.t w
+$$\triangledown C = \Phi^T(\Phi w -t)$$
+
+let it be 0, we get 
+$$w = (\Phi^T\Phi)^{-1}\Phi^Tt$$
+(we need to investigate 2nd order derivative matrix to make sure this zero point is not a saddle point.)
+\\
+\\
+to predict a test data
+$$y' = w^Tx'$$
+
+\section{Maximum likelihood}
+all data points are assumed i.i.d Gaussian, $t = y(x,w)+\epsilon$ where $\epsilon$ is the zero mean Gaussian additive noise.
+
+likelihood function
+$$p(t|X,w,\beta) = \prod_n N(t_n|w^t\phi(x_n), \beta^{-1}) $$
+
+maximize the likelihood, or the logarithm of the likelihood, is equal to minimize the sum of squared error, and at last get the same result as the least squares.
+
+if assume other density distribution, we get different model. e.g. for laplacian noise, $p(\epsilon) = {\frac 1 {2a}} e^{-\frac {|z|} {a}}$, we get model $\hat{x} = argmin_x |ax-y|_1$
+
+\section {LDA}
+
+It's said, that LDA is equivalent to liner regression, for two classes problems.
+
+\section{Softmax}
+
+\section{Bayesian}
+According to Bayesian formula:
+  $$ p(w|X,t) = \frac {p(t|X,w,\beta) * p(w)} {\sum_\beta  p(t|X,w,\beta) * p(w)} $$
+
+Given that $p(w|\alpha) = N(0,\alpha I)$ (isotropic Gaussian with zero mean), maximize the above function is same as minimize $|y-t|^2 + \alpha w^Tw$. This is squared errors plus ridge regularization
+
+Q: how to interpret lasso regression with bayesian theory?
+
+\section{Kernel methods}
+regularized sum of squares, 
+$$ J(w) = \frac 1 2 (\Phi w - y)^T(\Phi w -y) + \lambda w^Tw$$
+gradient
+$$\triangledown J = \Phi^T (\Phi w - y) +\lambda w$$
+
+Let the gradient be 0, we get
+
+$$w = \Phi^T a$$
+where
+$$a = - \frac 1 \lambda (\Phi w - y)$$
+
+replace $\Phi^T a$ into J(w), we get
+
+$$J(w) = \frac 1 2 (w^T\Phi^T\Phi w -y^T\Phi w -w^T\Phi^Ty +y^TY) + \lambda w^Tw$$
+$$J(a) = \frac 1 2 (a^T\Phi\Phi^T\Phi \Phi^T a -y^T\Phi \Phi^T a -a^T \ Phi \Phi^Ty +y^Ty) + \lambda a^T\Phi \Phi^T a$$
+
+let $$K= \Phi \Phi^T$$, we get
+
+$$J(a) = \frac 1 2 (a^T K K a -y^T K a -a^T K^Ty +y^Ty) + \lambda a^T K a$$
+
+$$\triangledown J(a) = KKa - K y +2 \lambda K a $$
+
+let it be 0, we get
+
+$$a = (K + 2\lambda I)^{-1}y$$
+
+then to predict for x, we use
+
+$$\hat y(x) = \phi(x) \Phi^T a = \phi(x) \Phi^T (K + 2 \lambda I)^{-1}y = k(x)^T (K + 2 \lambda I)^{-1}y$$
+
+where $\phi(x)$ is a row vector, and K is called kernel matrix.
+
+
+Although $k(x) = \phi(x) \Phi$ and $K = \Phi \Phi^T$, but in computation, we don't really need $\Phi$, we can design kernel functions directly, e.g. $k(x_m,x_n) = f(x_m, x_n) = \phi(x_m)^T \phi(x_n)$. 
+
+The function must be a valid kernel, or, in other words, it must correspond to a scalar product in some feature space. Sometimes we can construct kernel functions corresponding to infinite dimensional feature spaces.
+
+A commonly used kernel is Gaussian kernel:
+ $$ k(x,x') = exp(\frac {- \vert x - x' \vert ^2} {2 \sigma ^2})$$
+
+Problem: 
+\begin{itemize}
+
+	\item  how to train this model? or not to train at all? 
+
+	A: reasoning about the process of inducing the prediction formula, we get the value of a by minimizing J(a), so we don't need to train the model again, it's already the best. But still we can adjust $\lambda$ or kernel functions, and test them with validation sets.
+
+	Also in regularized linear regression model, these is a penalty parameter $\lambda$, it's chosen too, not trained.
+
+	\item the prediction formula uses only one unknown variable $\lambda$, how to select this value?
+
+	A: ref previous problem.
+
+\end{itemize}
+
+\subsection{Gaussian Process}
+
+Assume w is isotropic Gaussian, $y=\Phi w, t = y + \epsilon$,y is linear combination of w, $\epsilon$ is also Gaussian independent of w, then y is also Gaussian.
+ let
+ $$P(w) = N(0, \alpha I)$$
+ $$P(\epsilon) = N(0, \beta)$$
+ then 
+
+$$
+    E(y) = \Phi E(w) = 0\\
+$$
+$$
+  Cov(y) = E(y y^T) 
+         = E(\Phi w w^T \Phi^T) 
+         = \Phi E(w w^T) \Phi^T 
+         = \alpha \Phi \Phi^T
+         = K
+$$
+
+$$ P(y) = N(0, K) $$
+$$ P(t|y) = N(0, \beta^{-1} I) $$
+$$   P(t) = N(t|0, C) = N(t|0, K+ \beta ^{-1}) $$
+
+the co-variance matrix of P(t) can be calculated by kernel functions, without using design matrix $\Phi$, this make it possible to handle infinite dimensional feature space.
+
+Problems:
+\begin{itemize}
+	
+	\item How to predict with Gaussian process model?
+
+	A:use conditional Gaussian distribution formula:
+ 
+
+	\item How to train a Gaussian Process model? what  parameters do we need to find?
+	
+	\item It's said that GP is modeling directly on functions space, which function?
+\end{itemize}
+
+\chapter{Algorithms}
+
+\chapter{Statistical Learning}
+\section{Statistical concept}
+\begin{itemize}
+\item
+population regression line
+
+best linear approximation to the true model.
+\item least square line
+
+\item bias vs variance
+
+$MSE = BIAS^2 + VARIANCE$
+
+
+\item formula of standard error(SE)
+$$ Var(\mu) = SE(\mu)^2 = \frac {\sigma^2} {n} $$
+
+\item t-statistic, t-distribution (TBD)
+
+\item degrees of freedom - number of free (independent) variables
+
+\item f-statistic
+\item F1-score
+\item RSE - Residual Standard Error
+$$RSE = \sqrt{{1 \over {n-2}} RSS}$$
+\item $R^2$   
+$$R^2 = {\frac {TSS - RSS} {TSS}}$$
+TSS total sum of squares. 
+$$TSS = \Sigma_i(y_i - E(y))^2$$  
+RSS residual sum of squares. 
+$$RSS = \Sigma(y_i - y)^2$$
+
+\item p-value  
+\item null hypothesis (H) - assume null hypothesis, compute p-value, which shows the probability that the data is observed given that H is true. this is to say, p = P(D|H), the posterior probability? refer to chapter 37 of [1] and chapter 3 of [2]
+
+\item alternative hypothesis
+
+\item LDA  
+$$ P(Y=k|X=x) = \frac {P(X=x|y=k) * P(y=k)}  {\Sigma_l P(X=x|y=l) * P(y=l) }$$
+prior probability: $P(Y=k)$   
+suppose $P(X=x|y=l)$ has normal distribution, and has equal variance for all $l$. then, to get the largest value of $P(Y=k|X=x)$, we need only to get the largest nominator in the right part.  
+let $\pi_k = P(y=k)$
+the formula above have same denominator for each class k, we need only compute the nominator. plug in the normal distribution formula, we get
+$$ d_k(x) = \pi_k{\frac 1 {\sqrt{2\pi} \sigma }} exp({-{\frac 1 {2 \sigma^2}}(x - \mu_k)^2}) $$  
+taking the log we get:  
+$$log(d_k(x)) = log(\pi_k) -{1 \over 2 \sigma^2}(x - \mu_k)^2 - log(\sqrt{2\pi} \sigma) $$  
+the last item is the same for all k, so we can ignore it also.  
+and for given x, $x^2 \over {2 \sigma^2}$ is also a constant, at last we get:  
+$$log(\pi_k) + {\mu_k x \over \sigma^2} - {\mu_k^2 \over 2 \sigma^2}$$
+we can assign  x the class k for which the above formula is largest.
+
+\end{itemize}
+
+\section {neural networks}
+\begin{itemize}
+\item sigmoid function  
+$f(z) = {1 \over {1 + e^{-z}}}$  
+why do we use -z other than z? Maybe to make f(z) a ascending function.
+\end{itemize}
+
+\section{spline functions}
+\begin{itemize}
+
+
+\item make a comparison between Gradient descent and Neuton method   
+\item gradient descent, if we adjust parameters each time after one sample training, it's called stochastic gradient descent, and if we adjust parameters once after a batch training, it's called gradient descent.   
++ stochastic gradient descent, on-line learning   
++ gradient descent, batch learning.    
+problem: why it's called stochastic?
+problem2: some books call on-line learning those methods which test a few examples, not just limited to only one.   
+
+\item check if the lasso regularization method finds the same model as SVD or PCA. 3Mar2006: svd and pca find potential dimensions (linearly combinations of existing ones), they do base-transformation, so apparently get different answer from lasso? and if so, check if other dimension-reducing methods get same answer as lasso.
+\end{itemize}
+
+
+\section{Bootstrap}
+Original data points $X=\{x_1,x_2,...,x_N\}$
+
+Create new data set by drawing N points at random from X, with replacement (some x may be replicated, and others may be absent). this process can be repeated L times, and we got L data sets.
+\section {Perceptron}
+ESL,4.5
+compute a linear combination of input features and return the sign, is called perceptron.
+
+It's linear, so the separator contains 0 point. $y=sign(w^Tx)$
+
+How to train?
+
+For mis-classified sample $x_i$, let $w \leftarrow w + y_i \eta x_i$. Repeat it until converged. 
+
+\section {Random forest}
+\section {Extra trees}
+\section {Gradient Boost machine}
+
+\section {Kernel methods}
+
+\section{Gaussian process}
+
+Linear regression in GP's view
+\\
+Linear classification in GP's view
+\\
+In normal Gaussian process, the index set is time series. but in machine learning context, the index set is often the index of input data.
+
+\begin{itemize}
+	\item how GP model make a prediction?
+\end{itemize}
+
+\section {Ensembling learning}
+\subsection{Ensembing methods}
+\begin{itemize}
+	\item vote
+	\item weighted vote
+	\item averaging
+	\item geometric mean (maybe better than averaging)
+	\item rank averaging
+	
+	 Rank the predictions first, then averaging ranks. 
+	\item stacked generalization
+	
+	 Use a pool of base classifiers, and then use another classifier to combine their predictions, aiming to reduce generalization error.
+	\item blending
+	
+	almost same as stacked generalization. 
+	
+\end{itemize}
+\subsection{reference}
+	kaggle ensembling guide, mlwave.com
+\section {model metrics}
+	\begin{itemize}
+		\item logloss
+		\item AUC, area under curve (ROC curve)
+		\item accuracy
+		\item precision and recall
+		
+		precision: fraction of detections that were reported by the model that were correct.
+
+		recall: fraction of true events that were detected.
+		
+		\item F1 score 
+		$$ F1 = {2pr\over {p+r}} $$
+		\item coverage
+		
+		fractions of examples that a machine learning system can produce a response. (the rest of which need a human being to decide.)
+	\end{itemize}
+	
+\section {time series}
+
+for single variable time series,
+
+\textbf{weak stationary}, means the auto-covariance depends on the separation of $x_s$ and $x_t$, say, $\vert s-t \vert$, and not on where the points are located in time, and the mean value function is constant.
+
+\textbf{strictly stationary}, means the probabilistic behavior of every collection of values $\{x_{t1}, x_{t2}, ..., x_{tn}\}$ is identical to a time shift of the values $\{x_{t1+h}, x_{t2+h}, ..., x_{tn+h}\}$
+
+for k-dimensional time series
+
+\textbf{weakly stationary} if $E(z_t) = \mu$, a K-dimensional constant vector, and $Cov(z_t) = E((z_t-\mu)(z_t-\mu)^T) = \Sigma_z$, a constant $K \times K$ positive-definite matrix. in other words, the first two moments of Zt is time-invariant.
+
+\textbf{strictly stationary} has the same meaning as for single-variable time series. the joint probability distribution of m collection, $(z_{t1}, z_{tm})$, is the same as that of $(z_{t1+j}, z_{tm+j})$
+
+\section{Mixture Gaussian}
+\section{EM}
+
+  
+\section{references}
+[1] information theory, inference, and learning algorithms by David J.C. MacKay    
+[2] statistical foundation of machine learning by Gianluca Bontempi  
+
+\chapter{Discretization}
+\section {Bayesian Discretization}
+The basic idea is to use K-means algorithm to cluster values of an attribute, while the user has to specify the K value.
+\section {ID3}
+use information entropy to choose attributes and cutpoint.
+$$H(S) = - \sum_{x \in S} p(x)log_2 {p(x)} $$
+\section {C4.5}
+
+\section {Maximum Marginal Entropy}
+
+\section {Ent-MDLP (minimum description length principle)}
+basic idea: a cutpoint for a set of points is accepted if the cost or length of the message required to send after partition is less than the cost or length of the message required to send before the partition.
+
+\section {$ \chi^2 $}
+\chapter{Optimization}
+ Newton method
+ 
+ BFGS
+ 
+ Q:why in convex optimization problem the contraints functions need to be all convex?
+\section {Line Search}
+\begin{itemize}
+\item Scale Invariance
+
+if a direction and step length are selected base on an algorithm that is not sersitive to x, it's called scale invariant.
+
+\item Armijo condition
+$$ f(x_k+\alpha p_k) <= f(x_k) + c_1 \alpha \triangledown f_k^T p_k $$
+where $ \triangledown f_k^T p_k $ is the directional derivative. Armijo condition make sure that the decrease of f is proportional to both a and directional derivative. $c_1 \in (0, 1)$. But Armijo condition can't assure the sufficiency of decrease since for small $\alpha$ near $x_k$ the condition is almost always met.
+
+\item Wolfe conditions
+$$ \triangledown f(x_k+\alpha_k p_k)^T p_k >= c_2 \triangledown f_k^Tp_k $$
+Wolfe conditions makes sure that the step length is not too small, as an additional condition to Armijo condition. It means the directional derivative at $\alpha_k$ is not too low, since low value means in this direction the value of f will decrease quickly and we may not need to stop here.
+
+\item Strong Wolfe conditions
+
+\item Goldstein conditions
+
+\item Backtracking line search
+
+just give a big stop lenght, and shrink it slowly. then we can avoid problem of Armijo condition.
+
+\end{itemize}
+
+\chapter{statistics}
+
+\begin{itemize}
+	\item point estimation
+	\item set estimation
+	\item confidence interval
+	\item confidence set
+	\item sufficient statistics
+
+\end{itemize}
+
+
+\section {parameter inference}
+
+\subsection {methods}
+\begin{itemize}
+	\item moments. why called moments?
+	\item Maximum likelihood
+	\item bayesian inference
+\end{itemize}
+
+\subsection {check assumption}
+goodness-of-fit test
+
+\section {hypothesis testing}
+Null hypothesis, Alternative hypothesis
+
+\section {Monte Carlo statistics}
+Null hypothesis, Alternative hypothesis
+
+\chapter{Math}
+
+\section{SVD}   
+SVD(singular value decomposition) has a relation to Lagrange multipliers theorem. Find the details.   
+\begin{itemize}
+
+
+\item they both uses $\lambda$
+\item SVD can be proved using Lagrange Multipliers theorem, and Weierstrass theorem. (*topics in matrix analysis*, Horn Johnson).
+\item Horn Johnson also discussed the related history.
+\item *Vector calculus, linear algebra, and differential forms* also gives a brief history, in which the author says SVD is first proved by Lagrange, and the **eigenvalues are in fact Lagrange multipliers**. (but it seems that the author deleted this content in new edition of the book)
+\end{itemize}
+
+
+\section{PCA}
+what's the difference between SVD and PCA?
+If we remove the mean from features before doing PCA, then PCA is just SVD.
+
+(prove it, using PCA's correlation matrix)
+
+\section{linear algebra}
+for matrix A, f(x) = Ax, what is the max(f(x))? does it relate to eigen-value/eigen-vector of A? if A has rank(A) eigen-vectors, what's the relationship between these eigen-vectors and f(x)?
+
+anti-symmetric matrix:
+$-A = A^T$, 
+for such matrix, $x^TAx = 0$
+
+\subsection {Cholesky decomposition}
+
+\begin{itemize}
+	\item Freobenius norm
+	
+	sum of square of each elements
+	
+\end{itemize}
+\section{Probability Theory}
+
+
+	\subsection{Geometric distribution}
+	$$P(k) = (1-p)^{k-1}*p$$
+	\\
+	the name maybe has something to do with geometric sequence: a sequence of numbers where each term after the first one is found by multiplying the previous one by a fixed, non-zero number called the common ratio.(wikipedia)   
+	also named ????   
+	in contrast, the arithmetic sequence:   
+	a sequence of numbers where the difference between consecutive ones is constant (common difference).   
+	????   
+	\\
+	Let P(0) = p, P(1) = 1-p, then P(k) means (k-1) 1's before a 0 occures.
+
+
+	\subsection{Binomial distribution}
+	$$P(k) = (^n_k)p^k(1-p)^{n-k}$$
+	\\
+	Let P(0) = p, P(1) = 1-p, then P(k) means k out of n times experiment outcome is 0.
+	
+	\subsection{Gaussian distribution (normal distribution)}
+	$$N(x|\mu,\sigma) = P(x) = \frac 1 {\sqrt{2\pi}\sigma} exp(-\frac {(x-\mu)^2} {2\sigma^2})$$
+	$\beta = 1/\sigma^2$ is called precision
+
+	the sum of a random variables(\textbf{N terms}), which is itself a random variable, is Gaussian, as long as the \textbf{number of terms(N) in the sum} is large enough. (central limit theorem)
+	
+	\subsection {random variable}
+	Entropy
+	$$H[x]= - \sum_{x} p(x)log_2p(x)$$
+	
+	Differential Entropy
+	$$-\int p(x)lnp(x)dx $$
+	
+	The distribution that maximizes the differential entropy is the Gaussian (prove it)
+		
+	Cross Entropy
+	$$H(p,q) = - \int_x p(x) log(q(x))$$
+		
+	\subsection{Random vectors}
+	
+	Probability density of a random vector, is the joint probability density of its components.
+	
+	\subsection {Gaussian random vectors}
+	
+	If $(x_1, x_2, ..., x_n)$ is a Gaussian random vector, then each element $x_i$ is a Gaussian random variable, and each subset from a Gaussian random vector, too. However, this relationship is not reversible, that is, if $x_1, x_2, ..., x_n$ are all Gaussian random variables, the vector $(x_1, x_2, ..., x_n)$ is not necessarily a Gaussian Random vector.
+	
+	The properties of Gaussian random vectors follow largely from the jointly Gaussian property rather than merely the property of being individually Gaussian.
+	
+	Problem: derive the joint probability density function of a Gaussian random vector. 
+	
+	$p(x|m, \Sigma) = (2 \pi )^{-D/2} *|\Sigma|^{1/2}* exp(-{\frac 1 2}(x-m)^T \Sigma^-1 (x-m))$
+
+	Mode of Gaussian distribution
+
+	\subsection{Concetps}
+		\begin{itemize}
+		\item central limit theorem
+		
+		\item likelihood 
+		
+		Likelihood of parameter w, is the conditional probability of output given w, $p(t|w)$
+		
+		\item Mode of distribution
+		
+		The mode is a value that appears most often in a set of data, or the most probable value.
+		For Gaussian, the mode equals to mean.
+		
+		\item What is a Moment Generating Function(MGF)?  
+		
+		
+		In probability theory and statistics, MGF is another way to describe a random variable besides probability density function or cumulative distribution function. However, notice that not all random variables have a MGF.
+		
+		
+		MGF is defined as following:
+		$$M_x(X) = E[e^{tX}], t \in R$$ whenever this expectation exists. 
+
+		
+		\item Moment	
+		from wikipedia: the points represent probability density, the zeroth moment is the total probability(one), the first moment is the mean, the second central moment is the variance, the third is the skewness, and fourth kurtosis.
+		\end{itemize}
+\section{Information Theory}
+\begin{itemize}
+	\item conditional entropy of X give Y:
+	
+	\begin{align*}
+	H(X|Y) &= \sum_y H(X|Y=y) \\
+		   &= \sum_y P(y) \left[ \sum_x P(x|y)\log{1 \over {p(x|y)}} \right]\\
+		   &= \sum_{x,y} P(x,y)\log{1 \over {p(x|y)}}
+	\end{align*}
+	
+	\item relative entropy, or Kullback-leibler divergence:
+	
+	\begin{align*}
+	D_{KL}(P||Q) = \sum_x P(x) log{P(x) \over Q(x)}
+	\end{align*}
+	where P and Q are probablities over the same alphabet Ax.
+	
+	\item Gibb's inequality
+	$$ D_{KL}(P||Q) >= 0$$
+	
+\end{itemize}
+\section{Miscs} 
+\begin{itemize}
+
+	\item \textit{Moore-Penrose pseudo-inverse} of a matrix
+	
+	$(\phi^T\phi)^{-1}\phi^T$
+	
+	\item Gram matrix
+	
+	$\phi\phi^T$
+	
+	
+	
+\end{itemize}
+	
+	
+\section{Multi-variable functions}
+\begin{itemize}
+	\item interior - x is interior to set A if there is some neighborhood U of x, such that $U \subset A$
+	
+	\item open set - every point of A is interior, then A is open.
+	
+	\item closed set - complement $A^c$ is open, then A is closed.
+	
+	\item compact set - in $E^n$, closed and bounded set. more general definition: a subset S of a topological space $S_0$ is compact if every open covering of S contains a finite sub-covering.
+	
+\end{itemize}
+\subsection {Problems}
+\begin{itemize}
+
+	
+	\item why topology define compact set in such a wield way?
+	
+	\item what are the problems that measure theory solved while other old theories can't solve?
+\end{itemize}
+
+
+\section{Vector Calculus}
+\begin{itemize}
+	\item gradient
+	\item derivative of vector formulas
+	
+	$\frac {d(x^Tx)} {dx} = 2x$
+	
+	$\frac {d(x^TMx)} {dx} = (M+M^T)x$
+	
+	$\frac {d(Mx)^T(Mx)} {dx} = \frac {d(x^TM^TMx)} {dx} = 2(M^TM)x $
+	
+	$\frac {d(Mx-y)^T(Mx-y)} {dx} $\\
+	$= \frac {d (X^TM^TMx - x^TM^Ty - y^TMx - y^Ty ) } {dx} $\\
+	$= 2M^TMx -M^Ty - (y^TM)^T$\\
+	$= 2M^T(Mx - y) $
+\end{itemize} 
+\section{Analysis}
+\begin{itemize}
+	\item $L^1$ space: integrable functions on $R^d$ with the norm defined as $$ ||f(x)|| = \int_{R^d} |f(x)|dx $$
+	
+	\item $L^2$ space: integrable functions on $R^d$ with the norm defined as $$ ||f(x)|| = \left( \int_{R^d} |f(x)|^2 dx \right) ^{1 \over 2} $$
+	inner product defined as  $$<f,g> = \int f(x) \overline{g(x)} dx$$
+	metric defined as $$d(f,g) = ||f-g||$$
+	it's a hilbert space.
+	
+	\item {Quadratic forms}
+	
+	Quadratic forms are polynormials, all of whose terms are of degree 2. 
+	
+	quadratic forms as a sum of squares: all quadratic forms on $R^n$ can be decomposed into sums of m linearly independant linear functions. 
+	
+	$$Q(x) = (\alpha_1(x))^2 + ... + (\alpha_k(x))^2 - (\alpha_{k+1}(x))^2 ... - (\alpha_{k+l}(x))^2$$
+	
+	where $x \in R^n$
+	
+	and the number k and l are independant of specifically choosen linear functions, they depend only on Q(x).
+	
+	(k,l) is the so-called signature of the quadratic form $Q(x)$
+	
+	Q:how to use properties of quadratic forms to decide the type of a critical point? local mininum/maximum/saddle?
+	
+	
+	\item Differential Forms
+	
+	\item Questions
+	
+	The determinant of a matrix is the volume of the parallegram spanned by the vectors of the matrix, prove it.
+	
+	
+	
+\end{itemize}
+
+\section{Topology}
+
+\begin{itemize}
+	\item first-countable space
+	
+	A space X is said to be first-countable if each point has a countable neighbourhood basis (local base).
+	
+	\item second-countable space
+	
+	A space is said to be second-countable if its topology has a countable base. More explicitly, this means that a topological space  T is second countable if there exists some countable collection $ U=\{U_{i}\}_{i=1}^{\infty }$ of open subsets of T such that any open subset of  T can be written as a union of elements of some subfamily of U.
+	
+	\item hausdorff space
+	
+	A space X where all distinct points of X are pairwise neighborhood-seperable. If x, y are distinct points of X, there exists a neighbor U of x and a neighbor V of y such that $U \cap V = \emptyset $
+	
+	\item open
+	
+	\item closed
+	
+	
+\end{itemize}
+
+
+\section {Matrix Manifold}
+\begin{itemize}
+	\item chart
+	
+	A bijection $\phi$ of a subset $U$ of $M$ onto an open subset of $R^d$ is called a d-dimentional chart of set M, denoted by  $(U, \phi)$
+	
+	\item {atlas}
+	An atlas of $M$ into $R^d$ is a collections of charts $(U_{\alpha}, \phi_{\alpha })$ of $M$ such that 
+	
+	1) $\bigcup_{\alpha}U_{\alpha} = M$
+	2) the elements of an atlas overlap smoothly. if $U_{\alpha} \cup U_{\beta}  \neq \emptyset$, the sets $\phi_{\alpha}(U_{\alpha} \cap U_{\beta})$ and  $\phi_{\beta}(U_{\alpha} \cap U_{\beta})$ are open sets of $R^d$ and the changes of coordinates $\phi_{\beta} \circ \phi_{\alpha}^{-1} : R^d \to R^d $ is smooth.
+	
+	\item {manifold}
+	
+	a (d-dimensional) manifold is a couple $(M, A^+)$, where $M$ is a set and $A^+$ is a maximal atlas of $M$ into $R^d$, such that the topology induced by $A^+$ is hausdorff and second-countable.
+	
+	lie: This definition is different from the one defined in analysis fields. In these literatures a manifold is a topological space that locally resembles euclidean space near each point. Maybe the only defference is the set M.
+	
+	
+	\item embedded submanifolds
+	\item quotient manifolds
+	
+	
+\end{itemize}
+	
+\chapter{Problems}
+
+Generative model: $p(y|x) = p(x|y)p(y)/p(x)$, models both input and output distributions explicitly or implicitly.
+
+
+Discriminative model: $p(y|x)$
+models posterior distribution directly.
+
+
+\chapter{NLP}
+
+\section{Word Vectors}
+
+\subsection{Skip Gram model}
+use centor word to predict context words, maximize the average log probability
+$1\over T \sum$
+
+$$ p(w_o | w_c) = {exp(<w_o,w_c>) \over \sum_{j \in V} exp(<w_j,w_c>) })$$
+
+cost function:
+\begin{itemize}
+	\item full softmax
+	\item hierarchical softmax
+	\item NCE(noise contrastive estimation)
+	\item NEG(negative samping)
+	$$log(\sigma <wo,wi>) + \sum E_{w_i  p_n(w)} {log(\sigma (- <wo,wi>))}$$
+\end{itemize}
+
+
+\subsection{CBOW model}
+
+CBOW - use context words to predict center word, with the context words represented as a summary of word vectors.
+
+\subsection{GloVe}
+GloVe
+
+\end{document}
