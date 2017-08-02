@@ -1,0 +1,80 @@
+\documentclass[10pt,a4paper]{book}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\title{math & ml notes}
+\begin{document}
+
+
+\chapter{}
+\begin{itemize}
+	\item TensorArray
+	
+	Class wrapping dynamic-sized, per-time-step, write-once Tensor arrays.
+\end{itemize}
+
+
+\chapter{QA}
+\section {Bazel}
+
+\section {Protobuf}
+
+\begin{itemize}
+	\item How to generate debug version
+	
+	Add "--copt=-g" to bazel build options
+	
+	\begin{quote}
+		bazel build --config=opt --copt=-g //tensorflow/tools/pip\_package:build\_pip\_package
+	\end{quote}
+
+
+	\item tensorflow's runtime architecture
+	
+	1)single machine
+	2)Cluster
+	
+
+	\item what happens when a session is created?
+	
+	1) Search gpu device
+	2) many threads are created
+	3) Code: 
+	  c api: TF\_NewSession, python
+
+	Python class:
+	
+	SessionInterface 
+	
+	BaseSession 
+	
+	Session
+
+	In init of BaseSession:
+	
+	1)get graph (default, or provided by user)
+	
+	2)A target maybe provided, what is it? An execution engine to connect to?
+	
+	3) call CAPI TF\_NewSession
+	
+	core/public/session.h
+	core/common\_runtime/session.cc
+	SessionFactory::GetFactory()->NewSession
+	
+	session factory manages many sessions, and they are compared to options of NewSession call, 
+	if multiple factories are found, an error occures.
+	
+	Q: how many factories are there in tensorflow?
+
+	\item What is a tensorflow execution engine?
+	
+	\item given a CAPI function name, what is the internal corresponding class/methods?
+	
+	find them in capi.cc
+\end{itemize}
+
+
+\end{document}
