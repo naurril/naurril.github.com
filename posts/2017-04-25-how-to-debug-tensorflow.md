@@ -22,6 +22,10 @@ For c/c++ part, you can do with the following 2 steps:
    ```
     CC_OPT_FLAGS=-g ./configure
    ```
+   or add --copt=-g after bazel build 
+   
+   bazel build -c opt --copt=-g  --config=cuda //tensorflow/cc:tutorials_example_trainer
+   
    and then follow tensorflow [install from source steps](https://www.tensorflow.org/install/install_sources).  
    You will get a mush larger (~373M as of 1.1.0rc2) whl package.
  2. use gdb to start python   
