@@ -26,16 +26,26 @@
     * Single machine
     * Cluster
 
+## module loading
+
+when you import tensorflow in python, what happend?
+
+1) session factories are registered<br>
+2) device factories are registerd.<br>
+3) ops are registered<br>
+
+they all use the same registration mechanism: global variable's constructor.
 
 ## Create Session
-* Preparations
-  * Search gpu device
-  * many threads are created
+
+devices are searched (GPU or other cards), a thread pool is created for local machine.
+but more threads than the cpu cores are created, why?
+
 * Code:
   * Python part <br>
     class diagram: SessionInterface <- BaseSession <- Session
 
-    BaseSession.__init__:
+    BaseSession.__init\__:
     * prepare graph, config, target, and call capi TF_NewSession.<br>
       A target is a string, specifies a device, none for local machine,
       "grpc://" started string for GRPC device.
@@ -107,7 +117,7 @@
         
             some fed tensor may be incompatible with the device, movers move tensors to compatible 
             devices. this step is only to tensors in feed_dicts. (Q: It means that a feed tensor can 
-            have it's device specified?)
+            have its device specified?)
             
         * self._do_run
             * extend_graph
@@ -119,9 +129,33 @@
     * parse run_metadata returned from core.
     * do some cleaning stuff
 * core(c/c++) part
-    * TF_ExtendGraph
+    * TF_ExtendGraph <br>
         parse serialized string to GraphDef, 
-    * TF_Run
+    * TF_Run <br>
+        translate input/output parameters to c++ structures, call TF_RunHelper.
+    * TF_RunHelper <br>
+        parse run options from buffer (buffer is owned by python)<br>
+        session->Run()<br>
+        serialize run-meta-data<br>
+        write outputs back.<br>
+    * DirectSession->Run<br>
+        - get thread pool
+        - get executors
+        - prepare runtime environment
+            - create a call frame
+            - create a RunState
+            - create executor barrier
+            - prepare args (Executor::Args)
+        - put all executors to work <br>
+        - wait for executors to finish. wait is implemented by condition variable (on posix system). <br>
+        - outputs processing <br>
+        - update cost model <br>
+        - output partition graph <br>
+
+
+
+
+
     
 ## Device Management
 ## SessionFactory management
