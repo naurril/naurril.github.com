@@ -1,8 +1,11 @@
 
 ## Concepts
     * tensor
+    
     * tensor handle
+    
     * function library
+    
     * partial run
 ## Qestions
 * What is the different between new api and old api?
@@ -16,7 +19,7 @@
     * serailize run_options(input), prepare run_metadata(output).
     
         it seems that data communication between core and python are mainly by 
-        proto-buffers, not by direct c/c++ structures, Besides some basic data structures.
+        proto-buffers, not by direct c/c++ structures, besides some basic data structures.
     
     * call self._run
         * Validate and process feed_dict.
