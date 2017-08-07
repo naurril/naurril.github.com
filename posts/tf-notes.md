@@ -90,6 +90,10 @@ but more threads than the cpu cores are created, why?
 
 
 ## Session.Run()
+* Questions
+
+    * A fetch can be an Operation, when would this be the case? see _FetchHandler.__init\__()
+    
 * python part
   * BaseSession.Run()
     * serailize run_options(input), prepare run_metadata(output).
@@ -130,7 +134,12 @@ but more threads than the cpu cores are created, why?
     * do some cleaning stuff
 * core(c/c++) part
     * TF_ExtendGraph <br>
-        parse serialized string to GraphDef, 
+        1) parse serialized string to GraphDef, 
+        2) initialize execution state. 
+        code: SimpleGraphExecutionState::MakeForBaseGraph().
+        the execution state will be needed at session->Run.
+        this does no more than saving graph, devices, options, etc.
+        
     * TF_Run <br>
         translate input/output parameters to c++ structures, call TF_RunHelper.
     * TF_RunHelper <br>
