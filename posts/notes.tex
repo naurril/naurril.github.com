@@ -356,6 +356,10 @@ basic idea: a cutpoint for a set of points is accepted if the cost or length of 
  
  Q:why in convex optimization problem the contraints functions need to be all convex?
 \section {Line Search}
+
+$$x_{k+1} = x_k + t_k \eta_k$$
+where $\eta_k$ is the search direction, and $t_k$ is the step size.
+
 \begin{itemize}
 \item Scale Invariance
 
@@ -625,6 +629,16 @@ for such matrix, $x^TAx = 0$
 	
 	
 	\item Differential Forms
+	\item inverse function theorem
+	
+	
+	invertablity of derivative of f means invertablity of f locally, because derivative D(f) is very good local approximation for f.
+	
+	$F(u_0+h) = F(u_0) + D_{u_0}h + r(h)$
+	
+	where $r(h) = o(||h||)$ as $h \to 0$
+	
+	\item Banach fixed point theorem
 	
 	\item Questions
 	
@@ -651,6 +665,10 @@ for such matrix, $x^TAx = 0$
 	
 	\item open
 	
+	how is open defined? or, is 'open' a predefined concept in topology, in other words, 'open' is not defined inside topology?
+	
+	
+	
 	\item closed
 	
 	
@@ -673,12 +691,31 @@ for such matrix, $x^TAx = 0$
 	
 	a (d-dimensional) manifold is a couple $(M, A^+)$, where $M$ is a set and $A^+$ is a maximal atlas of $M$ into $R^d$, such that the topology induced by $A^+$ is hausdorff and second-countable.
 	
-	lie: This definition is different from the one defined in analysis fields. In these literatures a manifold is a topological space that locally resembles euclidean space near each point. Maybe the only defference is the set M.
+	lie: this definition is different from the one defined in analysis fields. In those literatures a manifold is a topological space that locally resembles euclidean space near each point. Maybe the only defference is the set M.
 	
 	
 	\item embedded submanifolds
 	\item quotient manifolds
+	\item generalized eigen-value problem
 	
+	
+	finding eigen pairs of matrix pencil is known as the generalized eigen-value problem. $Av = \lambda B v$ where $(A,B)$ is a matrix pencil.
+	
+	\item {Stiefel manifold}
+	
+	$\{M:R^{n*p}\}$ where all columns of M are linearly independant, and $p \leq n$, is called noncompact Stiefel manifold of full-rand n*p matrices.
+	
+	
+	$\{X \in R^{n*p}, X^T X = I_p\}$ is compact Stiefel manifold. 
+	
+	
+	\item {quotient manifold}
+	
+	the set of equivalent classes of a relation r of M is called the quotient of M by ~, denoted as $M/r$. 
+	
+	\item {problems}
+	
+	is it possible to use category theory to interpret some topics in matrix manifold?
 	
 \end{itemize}
 	
