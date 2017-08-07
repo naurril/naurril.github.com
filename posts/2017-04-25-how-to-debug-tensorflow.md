@@ -31,17 +31,17 @@ For c/c++ part, you can do with the following 2 steps:
    
    and then follow tensorflow [install from source steps](https://www.tensorflow.org/install/install_sources).  
    You will get a mush larger (~373M as of 1.1.0rc2) whl package.
+   
  2. use gdb to start python   
     ```
-    $ gdb python
-    (gdb) r
-    >>> import tensorflow as tf
-    >>>
-    >>> a=tf.constant(1)
-    >>> b=tf.constant(2)
-    >>> c=a+b
-    >>> sess=tf.Session()
-    >>> (Ctrl+C)
+    $ gdb python    
+    (gdb) r    
+    >>> import tensorflow as tf    
+    >>> a=tf.constant(1)    
+    >>> b=tf.constant(2)    
+    >>> c=a+b    
+    >>> sess=tf.Session()    
+    >>> (Ctrl+C)    
     Program received signal SIGINT, Interrupt.
     0x00007ffff6e1d903 in select () from /lib64/libc.so.6
     (gdb) b TF_ExtendGraph
