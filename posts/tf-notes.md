@@ -26,7 +26,76 @@
 
     * Single machine
     * Cluster
-* what's the difference between OP and OPKernel?
+* What's the difference between OP and OPKernel?<br>
+    A: Op is operation (like a declaration), OP Kernel is one implementation of Op. 
+    See doc 'extend/adding_an_op.md'.
+    
+* How is an OP be invoked?
+* The GraphDef is just a list of strings (see graph.proto, node_def.proto), ops and tensors are all
+referred to by name (string type), then the problem is, how are those
+tensors not specified by feed dict be transferred to core? e.g. constant 
+tensors. <br>
+    A: constant tensor is also serialized to string, as an attr 'value' of the const ops. example
+    
+    ```
+    node {
+      name: "Const"
+      op: "Const"
+      attr {
+        key: "dtype"
+        value {
+          type: DT_INT32
+        }
+      }
+      attr {
+        key: "value"
+        value {
+          tensor {
+            dtype: DT_INT32
+            tensor_shape {
+            }
+            int_val: 1
+          }
+        }
+      }
+    }
+    node {
+      name: "Const_1"
+      op: "Const"
+      attr {
+        key: "dtype"
+        value {
+          type: DT_INT32
+        }
+      }
+      attr {
+        key: "value"
+        value {
+          tensor {
+            dtype: DT_INT32
+            tensor_shape {
+            }
+            int_val: 2
+          }
+        }
+      }
+    }
+    node {
+      name: "add"
+      op: "Add"
+      input: "Const"
+      input: "Const_1"
+      attr {
+        key: "T"
+        value {
+          type: DT_INT32
+        }
+      }
+    }
+    versions {
+      producer: 24
+    }
+    ```
 
 ## module loading
 
@@ -165,6 +234,7 @@ but more threads than the cpu cores are created, why?
         - outputs processing <br>
         - update cost model <br>
         - output partition graph <br>
+
 
 
 
