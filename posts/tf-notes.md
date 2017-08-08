@@ -150,6 +150,9 @@ but more threads than the cpu cores are created, why?
     * DirectSession->Run<br>
         - get thread pool
         - get executors
+            - CreateGraphs
+            - optimize graph
+            
         - prepare runtime environment
             - create a call frame
             - create a RunState
