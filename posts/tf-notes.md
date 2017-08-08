@@ -6,6 +6,7 @@
 * partial run
 * TensorArray
 
+
     Class wrapping dynamic-sized, per-time-step, write-once Tensor arrays.
 ## Qestions
 * What is the different between new api and old api?
@@ -25,6 +26,7 @@
 
     * Single machine
     * Cluster
+* what's the difference between OP and OPKernel?
 
 ## module loading
 
