@@ -158,6 +158,10 @@ but more threads than the cpu cores are created, why?
 
     * given a CAPI function name, what is the internal corresponding class/methods?
         find them in capi.cc
+        
+    * why a direct session creates more threads than the number of cpu cores?<br>
+    search online, and it's said the googlers tested different configs, and the current
+    number is believed the best most efficient.
 
 
 ## Session.Run()
@@ -199,6 +203,9 @@ but more threads than the cpu cores are created, why?
               serialize graph, transmit it to core via TF_ExtendGraph
             * call TF_Run<br>
               this turns to core part.
+              
+              note there are 2 steps, but 1 step could be enough. the comments says that if 
+              new api is used, the extend-graph call is not needed.
         * build results(fetches)
 
     * parse run_metadata returned from core.
@@ -209,7 +216,15 @@ but more threads than the cpu cores are created, why?
         2) initialize execution state. 
         code: SimpleGraphExecutionState::MakeForBaseGraph().
         the execution state will be needed at session->Run.
-        this does no more than saving graph, devices, options, etc.
+        this does no more than saving graph, devices, options, etc. if it's the first time
+        a graph is extended. But if the session is initialized before, the graph need be 
+        extended really (see SimpleGraphExecutionState::Extend), in which case, conflicts are 
+        checked, new nodes are added, options, func_libs, versions are merged.
+        
+        It looks that the capi is rather strict on all incoming requests. outsiders are not 
+        trusted generally.
+        
+        new execution stat are created, instead of directly modifying the old one.
         
     * TF_Run <br>
         translate input/output parameters to c++ structures, call TF_RunHelper.
@@ -220,9 +235,16 @@ but more threads than the cpu cores are created, why?
         write outputs back.<br>
     * DirectSession->Run<br>
         - get thread pool
-        - get executors
+        - get executors (DirectSession::GetOrCreateExecutors)
             - CreateGraphs
             - optimize graph
+            
+            direct session maintains a <key, executor> map, the key is a string, contains inputs
+            /outpus/targets and other info. when an executor is wanted, this map is first searched, if 
+            find none, new executor is created and added into the map. To make the 
+            search faster, an cached key is used, in which case the inputs/outputs str are not sorted.
+            if the cache misses, use ordinary key, containing ordered inputs/outputs
+            (slower because of sorting)
             
         - prepare runtime environment
             - create a call frame
@@ -245,3 +267,18 @@ but more threads than the cpu cores are created, why?
 ## SessionFactory management
 ## Thread pool management
 ## Ops management
+
+## some c++ libs used in TF
+* c++ std
+    * std::unique_ptr
+    * std::initializer_list
+    * std::unordered_map
+    * std::move
+    * std::pair
+    * std::swap
+    * std::vector
+    * std::set_difference
+    * std::set_union
+    * std::inserter
+* gtl
+    * gtl::ArraySlice
