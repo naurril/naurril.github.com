@@ -3,8 +3,12 @@
 * tensor
 * tensor handle
 * function library
-* partial run
+* Partial run
 * TensorArray
+* Device
+* Executor
+* Task
+* Job
 
 
     Class wrapping dynamic-sized, per-time-step, write-once Tensor arrays.
@@ -236,15 +240,16 @@ but more threads than the cpu cores are created, why?
     * DirectSession->Run<br>
         - get thread pool
         - get executors (DirectSession::GetOrCreateExecutors)
-            - CreateGraphs
+            - CreateGraphs (DirectSession::CreateGraphs)
+              - Partition the graph across devices.
             - optimize graph
             
             direct session maintains a <key, executor> map, the key is a string, contains inputs
             /outpus/targets and other info. when an executor is wanted, this map is first searched, if 
             find none, new executor is created and added into the map. To make the 
-            search faster, an cached key is used, in which case the inputs/outputs str are not sorted.
-            if the cache misses, use ordinary key, containing ordered inputs/outputs
-            (slower because of sorting)
+            search faster, a cached key is used, in which case the inputs/outputs str are not sorted.
+            if the cache misses, another ordinary key, which contains ordered inputs/outputs, is used.
+            (of course slower because of sorting)
             
         - prepare runtime environment
             - create a call frame
