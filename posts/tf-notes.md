@@ -2,7 +2,9 @@
 ## Concepts
 * tensor
 * tensor handle
-* function library
+* function library<br>
+  Q: user defined functions by build a sub-graph?
+
 * Partial run
 * TensorArray
 * Device
@@ -172,7 +174,9 @@ but more threads than the cpu cores are created, why?
 * Questions
 
     * A fetch can be an Operation, when would this be the case? see _FetchHandler.__init\__()
-    
+    * How is a graph be partitioned?
+    * How does the cost model work?
+
 * python part
   * BaseSession.Run()
     * serailize run_options(input), prepare run_metadata(output).
@@ -218,7 +222,7 @@ but more threads than the cpu cores are created, why?
     * TF_ExtendGraph <br>
         1) parse serialized string to GraphDef, 
         2) initialize execution state. 
-        code: SimpleGraphExecutionState::MakeForBaseGraph().
+        code: SimpleGraphExecutionState::MakeForBaseGraph(), ( DirectSession::MaybeInitializeExecutionState)
         the execution state will be needed at session->Run.
         this does no more than saving graph, devices, options, etc. if it's the first time
         a graph is extended. But if the session is initialized before, the graph need be 
@@ -241,7 +245,27 @@ but more threads than the cpu cores are created, why?
         - get thread pool
         - get executors (DirectSession::GetOrCreateExecutors)
             - CreateGraphs (DirectSession::CreateGraphs)
+              - execution_state->BuildGraph (SimpleGraphExecutionState::BuildGraph)<br>
+                graph is stored in execution_state.
+                - OptimizeGraph
+                - RewriteGraphForExecution<br>
+                (mainly for control flow?)
+
               - Partition the graph across devices.
+                - build memory device type info for each node (graph_partition.cc)<br>
+                    memories are classified as device memory and host memory. device type
+                    is just a string, cpu or gpu or empty. device type is parsed
+                    from assigned device full name.
+
+                    Q: when is device assigned to each node?
+
+                    stateful node's placement can't be changed once placed. If execution_state's placement
+                    has no conflict with direct_session's,
+
+
+
+
+                -
             - optimize graph
             
             direct session maintains a <key, executor> map, the key is a string, contains inputs
@@ -287,3 +311,9 @@ but more threads than the cpu cores are created, why?
     * std::inserter
 * gtl
     * gtl::ArraySlice
+
+
+## miscs
+* tf code usually returns a status code, function outputs are carried
+in output parameters. a const ref (const &) is input para, address(* arg)
+is normally outputs.
