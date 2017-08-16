@@ -9,7 +9,8 @@
   it's just running part of the whole graph
   
 * TensorArray
-* Device
+* Device<br>
+  name scheme: /job: /task: /device: ..
 * Executor<br>
   the relationship of executor and thread
 * Task
@@ -259,7 +260,7 @@ but more threads than the cpu cores are created, why?
                 (mainly for control flow?)
 
               - Partition the graph across devices.
-                - build memory device type info for each node (graph_partition.cc)<br>
+                - build memory & device type info for each node (graph_partition.cc)<br>
                     memories are classified as device memory and host memory. device type
                     is just a string, cpu or gpu or empty. device type is parsed
                     from assigned device full name.
@@ -269,10 +270,12 @@ but more threads than the cpu cores are created, why?
                     stateful node's placement can't be changed once placed. If execution_state's placement
                     has no conflict with direct_session's,
 
+                    Q: when is a same memory send/recv needed for a edge? (function: NeedSameDeviceSendRecv)<br>
+                    A: src and dst nodes are in same device other than cpu, and their memory types
+                    are different. but, when does this happen? two nodes in gpu need to send/recv?
+                - nodes are partitioned according to the placed device, send/recv nodes are added if needed.
+                duplicated send/recv pairs are merged.
 
-
-
-                -
             - optimize graph
             
             direct session maintains a <key, executor> map, the key is a string, contains inputs
