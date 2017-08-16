@@ -3,12 +3,15 @@
 * tensor
 * tensor handle
 * function library<br>
-  Q: user defined functions by build a sub-graph?
+  user defined functions by building a sub-graph?
 
-* Partial run
+* Partial run<br>
+  it's just running part of the whole graph
+  
 * TensorArray
 * Device
-* Executor
+* Executor<br>
+  the relationship of executor and thread
 * Task
 * Job
 
@@ -35,7 +38,11 @@
 * What's the difference between OP and OPKernel?<br>
     A: Op is operation (like a declaration), OP Kernel is one implementation of Op. 
     See doc 'extend/adding_an_op.md'.
-    
+* Why is there a sink node and a source node in a graph?
+  when a graph is newed, a source(kSourceId=0) node and a sink(kSinkId=1)  node are created, 
+  and a edge is added between them. (Graph::Graph). ids of these two nodes are 
+  constants(0 and 1).
+  
 * How is an OP be invoked?
 * The GraphDef is just a list of strings (see graph.proto, node_def.proto), ops and tensors are all
 referred to by name (string type), then the problem is, how are those
