@@ -20,7 +20,9 @@
     Class wrapping dynamic-sized, per-time-step, write-once Tensor arrays.
 ## Qestions
 * What is the different between new api and old api?
-
+* why tf starts so many threads?<br>
+  gpu manager starts 2 threads.(gpu_event_mgr.cc)
+  
 * Why GraphDef contains a FunctionDefLibrary?
   It's experimental?
 
@@ -250,7 +252,9 @@ but more threads than the cpu cores are created, why?
         serialize run-meta-data<br>
         write outputs back.<br>
     * DirectSession->Run<br>
-        - get thread pool
+        - get thread pool<br>
+          is this thread pool related to multithreadpool device?<br>
+          this thread pool is created directly, has nothing to do with the multi-thread-device.
         - get executors (DirectSession::GetOrCreateExecutors)
             - CreateGraphs (DirectSession::CreateGraphs)
               - execution_state->BuildGraph (SimpleGraphExecutionState::BuildGraph)<br>
@@ -273,11 +277,19 @@ but more threads than the cpu cores are created, why?
                     Q: when is a same memory send/recv needed for a edge? (function: NeedSameDeviceSendRecv)<br>
                     A: src and dst nodes are in same device other than cpu, and their memory types
                     are different. but, when does this happen? two nodes in gpu need to send/recv?
+                    
                 - nodes are partitioned according to the placed device, send/recv nodes are added if needed.
                 duplicated send/recv pairs are merged.
+                
+                graph are partitioned into a set of GraphDef.
+                
+               - optimize each partition
 
             - optimize graph
-            
+            - create one executor for each graph partition<br>
+              NewLocalExecutor
+            - save this new (key, executorAndKey) pair.
+                        
             direct session maintains a <key, executor> map, the key is a string, contains inputs
             /outpus/targets and other info. when an executor is wanted, this map is first searched, if 
             find none, new executor is created and added into the map. To make the 
@@ -291,6 +303,20 @@ but more threads than the cpu cores are created, why?
             - create executor barrier
             - prepare args (Executor::Args)
         - put all executors to work <br>
+            all executors use the same args.<br>
+            thread pool is given to executor by args. executor calls pool->schedule
+            if new task is to be executed, the very task functions is an arg to schedule.
+            executor maintains a ready task list, after all dependent nodes finished the node 
+            is put into ready list. An empty ready list means all task done.<br>
+            Q: note that the thread-pool is used to run the task. when is GPU device be used? and how?
+            who manages the threads of the pool? is it possible that a kernel uses multiple threads
+            simultaneously? does executor have the knowledge of the number of threads of the pool?
+            
+            code: ExecutorState::Process<br>
+            when the executors are created(GetOrCreateExecutors), each graph partition is bond
+            with one executor, and a device is specified there. When a kernel is created, the device's
+            computeAsync method is invoked with the kernel, which is done by a thread of the pool.
+            
         - wait for executors to finish. wait is implemented by condition variable (on posix system). <br>
         - outputs processing <br>
         - update cost model <br>
@@ -322,7 +348,10 @@ but more threads than the cpu cores are created, why?
 * gtl
     * gtl::ArraySlice
 
-
+* eigen
+    * SimpleThreadPoolTempl<br>
+    when thread pool is created, all threads are started with the entry WorkerLoop, WorkerLoop
+    wait for notifications and when waked up will start execute new task.
 ## miscs
 * tf code usually returns a status code, function outputs are carried
 in output parameters. a const ref (const &) is input para, address(* arg)
