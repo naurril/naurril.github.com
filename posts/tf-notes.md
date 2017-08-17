@@ -34,6 +34,27 @@
     bazel build --config=opt --copt=-g //tensorflow/tools/pip\_package:build\_pip\_package
     ```
 
+* how to open TF's log<br>
+  use environment variable. set TF_CPP_MIN_VLOG_LEVEL=4<br>
+  4 is the max value you can set. and TF use a strange mechanism, log print when
+  the log level is less than TF_CPP_MIN_VLOG_LEVEL, otherwise it wont print.
+
+
+* how to pass session config to tf.Session()?<br>
+    ```
+    config = tf.ConfigProto()
+    config.graph_options.rewrite_options.optimize_tensor_layout=True
+    config.graph_options.rewrite_options.disable_model_pruning=False
+     s=tf.Session(config=config)
+    ```
+* how to pass options to TF's run()<br>
+    ```
+    options = tf.RunOptions()
+    options.trace_level = tf.RunOptions.FULL_TRACE
+    options.output_partition_graphs = True
+    metadata = tf.RunMetadata()
+    s.run(d, options=options, run_metadata=metadata)
+    ```
 * tensorflow's runtime architecture
 
     * Single machine
@@ -167,12 +188,12 @@ but more threads than the cpu cores are created, why?
         GRPCSessionFactory <br>
         DirectSessionFactory <br>
 
-    * How are these factories registered?
+    * How are these factories registered?<br>
         A: they use global variable's constructor to register itself.
 
     * What is a tensorflow execution engine?
 
-    * given a CAPI function name, what is the internal corresponding class/methods?
+    * given a CAPI function name, what is the internal corresponding class/methods?<br>
         find them in capi.cc
         
     * why a direct session creates more threads than the number of cpu cores?<br>
@@ -232,7 +253,11 @@ but more threads than the cpu cores are created, why?
     * TF_ExtendGraph <br>
         1) parse serialized string to GraphDef, 
         2) initialize execution state. 
-        code: SimpleGraphExecutionState::MakeForBaseGraph(), ( DirectSession::MaybeInitializeExecutionState)
+        code: SimpleGraphExecutionState::MakeForBaseGraph(), ( DirectSession::MaybeInitializeExecutionState)<br>
+        a new SimpleGraphExecutionState is created, default attrs are attached(AddDefaultAttrsToGraphDef),
+        and graph is initialized(InitBaseGraph), an optimization phase PRE_PLACEMENT is executed here. in this opt
+        phase only ParallelConcat is removed.
+
         the execution state will be needed at session->Run.
         this does no more than saving graph, devices, options, etc. if it's the first time
         a graph is extended. But if the session is initialized before, the graph need be 
@@ -259,9 +284,12 @@ but more threads than the cpu cores are created, why?
             - CreateGraphs (DirectSession::CreateGraphs)
               - execution_state->BuildGraph (SimpleGraphExecutionState::BuildGraph)<br>
                 graph is stored in execution_state.
-                - OptimizeGraph
+                - OptimizeGraph<br>
+                  meta optimizatoin. grappler::RunMetaOptimizer
                 - RewriteGraphForExecution<br>
-                (mainly for control flow?)
+                (mainly for control flow?)<br>
+                subgraphs needing to be run are extracted here.
+                - optimize again (POST_REWRITE_FOR_EXEC)
 
               - Partition the graph across devices.
                 - build memory & device type info for each node (graph_partition.cc)<br>
@@ -296,6 +324,12 @@ but more threads than the cpu cores are created, why?
             search faster, a cached key is used, in which case the inputs/outputs str are not sorted.
             if the cache misses, another ordinary key, which contains ordered inputs/outputs, is used.
             (of course slower because of sorting)
+
+            Executors here are just logical entities, they don't actually
+            execute the computations, but prepare envrionments, parameters and
+            pass these info to thread-pool, which prepares more things and delegate
+            the task to devices. Executors run in main thread, operate in sub-graph(partition) level,
+            thread pool run in non-main threads, operate in node/edge level, devices do the exact computation.
             
         - prepare runtime environment
             - create a call frame
@@ -317,7 +351,8 @@ but more threads than the cpu cores are created, why?
             with one executor, and a device is specified there. When a kernel is created, the device's
             computeAsync method is invoked with the kernel, which is done by a thread of the pool.
             
-        - wait for executors to finish. wait is implemented by condition variable (on posix system). <br>
+        - wait for executors to finish.<br>
+          wait is implemented by condition variable (on posix system).
         - outputs processing <br>
         - update cost model <br>
         - output partition graph <br>
@@ -326,7 +361,7 @@ but more threads than the cpu cores are created, why?
 
 
 
-
+## Graph optimization
     
 ## Device Management
 ## SessionFactory management
@@ -351,8 +386,10 @@ but more threads than the cpu cores are created, why?
 * eigen
     * SimpleThreadPoolTempl<br>
     when thread pool is created, all threads are started with the entry WorkerLoop, WorkerLoop
-    wait for notifications and when waked up will start execute new task.
+    wait for notifications and when waked up will start executing new task.
+
 ## miscs
 * tf code usually returns a status code, function outputs are carried
-in output parameters. a const ref (const &) is input para, address(* arg)
-is normally outputs.
+in output parameters. a const ref (const &) is input para, an address(* arg)
+is normally output para.
+
