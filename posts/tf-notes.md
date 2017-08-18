@@ -45,7 +45,7 @@
     config = tf.ConfigProto()
     config.graph_options.rewrite_options.optimize_tensor_layout=True
     config.graph_options.rewrite_options.disable_model_pruning=False
-     s=tf.Session(config=config)
+    s=tf.Session(config=config)
     ```
 * how to pass options to TF's run()<br>
     ```
@@ -254,9 +254,13 @@ but more threads than the cpu cores are created, why?
         1) parse serialized string to GraphDef, 
         2) initialize execution state. 
         code: SimpleGraphExecutionState::MakeForBaseGraph(), ( DirectSession::MaybeInitializeExecutionState)<br>
-        a new SimpleGraphExecutionState is created, default attrs are attached(AddDefaultAttrsToGraphDef),
-        and graph is initialized(InitBaseGraph), an optimization phase PRE_PLACEMENT is executed here. in this opt
-        phase only ParallelConcat is removed.
+        a new SimpleGraphExecutionState is created, 
+        default attrs are attached (AddDefaultAttrsToGraphDef),<br>
+        and graph is initialized (InitBaseGraph)        
+            - PRE_PLACEMENT optimization, in this opt phase only ParallelConcat is removed. 
+            - a SimplePlacer obj is used to assign nodes to devices
+            - POST_PLACEMENT optimization
+        
 
         the execution state will be needed at session->Run.
         this does no more than saving graph, devices, options, etc. if it's the first time
@@ -393,3 +397,4 @@ but more threads than the cpu cores are created, why?
 in output parameters. a const ref (const &) is input para, an address(* arg)
 is normally output para.
 
+* memory management of tf core (c++ codes)
