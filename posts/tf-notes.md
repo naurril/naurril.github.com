@@ -21,10 +21,13 @@ This is my own tf code notes, not intended for public reading. Thanks.
 
     Class wrapping dynamic-sized, per-time-step, write-once Tensor arrays.
 ## Qestions
+
 * What is the different between new api and old api?
 * why tf starts so many threads?<br>
   gpu manager starts 2 threads.(gpu_event_mgr.cc)
-  
+
+* Does python client interact with C core at graph building phase?
+
 * Why GraphDef contains a FunctionDefLibrary?
   It's experimental?
 
