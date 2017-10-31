@@ -1,3 +1,5 @@
+This is my own tf code notes, not intended for public reading. Thanks.
+
 
 ## Concepts
 * tensor
