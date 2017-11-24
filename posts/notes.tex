@@ -169,6 +169,57 @@ Problems:
 \chapter{Algorithms}
 
 \chapter{Statistical Learning}
+
+\section {model metrics}
+\begin{itemize}
+	\item logloss
+	\item AUC, area under curve (ROC curve)
+	\item accuracy
+	\item precision and recall
+	
+	precision: fraction of detections that were reported by the model that were correct.
+	
+	recall: fraction of true events that were detected.
+	
+	\item F1 score 
+	$$ F1 = {2pr\over {p+r}} $$
+	\item coverage
+	
+	fractions of examples that a machine learning system can produce a response. (the rest of which need a human being to decide.)
+\end{itemize}
+
+\subsection{regression metrics}
+\begin{itemize}
+	\item 
+\end{itemize}
+\subsection{classification metrics}
+\begin{itemize}
+	\item Accuracy score
+	\item Cohen's kappa
+	
+	$$ \kappa = {{\rho_o - \rho_e} \over {1 - \rho_e}}$$
+	where $\rho_o$ is relative observed agreement among raters (identical to accuracy), and $\rho_e$ is hypothetical probability of chance agreementt.
+	
+	$$\rho_e = {1\over N^2 }\sum_k n_{k1} n_{k2}$$
+	
+	where N is the number of items, $n_{k1}$ is number of items rater 1 give category k.
+	
+	\item confusion matrix
+	\item Hamming loss
+	
+	ratio of different label.
+	$$L = {1\over N}\sum 1(y \neq \hat{y}) $$
+	
+	\item Jaccard similarity coefficient score
+	
+	Jaccard similarity coefficient of the i-th samples is
+	$$J(y,\hat{y}) = { { |y \cap \hat{y} | } \over {|y \cup \hat{y}|}}$$
+	
+	\item $F_1$
+	\item $F_{\beta}$
+	
+\end{itemize}
+
 \section{Statistical concept}
 \begin{itemize}
 \item
@@ -200,6 +251,8 @@ $$TSS = \Sigma_i(y_i - E(y))^2$$
 RSS residual sum of squares. 
 $$RSS = \Sigma(y_i - y)^2$$
 
+R squared is the proportion of the variance.
+
 \item p-value  
 \item null hypothesis (H) - assume null hypothesis, compute p-value, which shows the probability that the data is observed given that H is true. this is to say, p = P(D|H), the posterior probability? refer to chapter 37 of [1] and chapter 3 of [2]
 
@@ -227,6 +280,13 @@ we can assign  x the class k for which the above formula is largest.
 $f(z) = {1 \over {1 + e^{-z}}}$  
 why do we use -z other than z? Maybe to make f(z) a ascending function.
 \end{itemize}
+
+\section {least angle regression (LAR)}
+https://en.wikipedia.org/wiki/Least-angle\_regression
+
+\section {least absolute shrinkage and selection operator (LASSO)}
+
+https://en.wikipedia.org/wiki/Least-angle\_regression
 
 \section{spline functions}
 \begin{itemize}
@@ -295,23 +355,7 @@ In normal Gaussian process, the index set is time series. but in machine learnin
 \end{itemize}
 \subsection{reference}
 	kaggle ensembling guide, mlwave.com
-\section {model metrics}
-	\begin{itemize}
-		\item logloss
-		\item AUC, area under curve (ROC curve)
-		\item accuracy
-		\item precision and recall
-		
-		precision: fraction of detections that were reported by the model that were correct.
 
-		recall: fraction of true events that were detected.
-		
-		\item F1 score 
-		$$ F1 = {2pr\over {p+r}} $$
-		\item coverage
-		
-		fractions of examples that a machine learning system can produce a response. (the rest of which need a human being to decide.)
-	\end{itemize}
 	
 \section {time series}
 
@@ -793,5 +837,24 @@ CBOW - use context words to predict center word, with the context words represen
 
 \subsection{GloVe}
 GloVe
+
+\chapter{Reinforcement learning}
+\subsection {policy gradient}
+Performance measure
+
+$$J(\theta)$$
+J need to be differentiable w.r.t $\theta$
+
+for not-too-large discrete action space, use softmax to select action. each action has a parameterized preference value as $h(s,a,\theta)$
+$$\pi(a|s,\theta) = {{exp(h(a,s,\theta))}\over{\sum_b{exp(h(b,s,\theta))}}}$$
+
+if we use a linear apporximation for h, it's
+$$h(s,a,\theta) = \theta^Tx(s,a)$$
+where x is the feature vector.
+
+advantage of policy gradient: selecting actions according to softmax can approach a deterministic policy, while with $\epsilon$-greedy selection by action values there is always a ration of $\epsilon$ selecting random values.
+although we can use softmax of action values but that alone cannot allow the policy to approach deterministic.
+
+\subsection {actor-critic}
 
 \end{document}
