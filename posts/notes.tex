@@ -282,11 +282,11 @@ why do we use -z other than z? Maybe to make f(z) a ascending function.
 \end{itemize}
 
 \section {least angle regression (LAR)}
-https://en.wikipedia.org/wiki/Least-angle_regression
+https://en.wikipedia.org/wiki/Least-angle\_regression
 
 \section {least absolute shrinkage and selection operator (LASSO)}
 
-https://en.wikipedia.org/wiki/Least-angle_regression
+https://en.wikipedia.org/wiki/Least-angle\_regression
 
 \section{spline functions}
 \begin{itemize}
@@ -798,5 +798,24 @@ CBOW - use context words to predict center word, with the context words represen
 
 \subsection{GloVe}
 GloVe
+
+\chapter{Reinforcement learning}
+\subsection {policy gradient}
+Performance measure
+
+$$J(\theta)$$
+J need to be differentiable w.r.t $\theta$
+
+for not-too-large discrete action space, use softmax to select action. each action has a parameterized preference value as $h(s,a,\theta)$
+$$\pi(a|s,\theta) = {{exp(h(a,s,\theta))}\over{\sum_b{exp(h(b,s,\theta))}}}$$
+
+if we use a linear apporximation for h, it's
+$$h(s,a,\theta) = \theta^Tx(s,a)$$
+where x is the feature vector.
+
+advantage of policy gradient: selecting actions according to softmax can approach a deterministic policy, while with $\epsilon$-greedy selection by action values there is always a ration of $\epsilon$ selecting random values.
+although we can use softmax of action values but that alone cannot allow the policy to approach deterministic.
+
+\subsection {actor-critic}
 
 \end{document}
