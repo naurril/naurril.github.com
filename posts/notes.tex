@@ -4,6 +4,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+
 \title{math & ml notes}
 \begin{document}
 
@@ -838,6 +839,8 @@ CBOW - use context words to predict center word, with the context words represen
 GloVe
 
 \chapter{Reinforcement learning}
+
+
 \section{concepts}
 \begin{itemize}
 	\item General policy iteration
@@ -916,7 +919,42 @@ GloVe
 	
 	
 \end{itemize}
+\section {Cross Entropy Methods (CEM)}
+
+The name of cross entropy methods comes from the cross-entropy (KL) distance. It has two phase:
+
+1) generate a sample of random data
+
+2) update the parameters of the random mechanism, on the basis of the data, in order to produce a better sample in next iteration.
+
+For policy improventment, the target function is
+
+$$\max_{\theta} U(\theta) = \max_{\theta}E[\sum_{t=0}^H R(s_t) | \pi_{\theta}]$$
+
+where $\pi_{\theta}$  is our policy.
+
+CEM views U as a black box, ignores all other information other than U collected during episode.
+
+population $P_{\mu^i}(\theta) $
+
+pseudo code for CEM:
+
+\noindent \indent for iter = 1,2...\\
+\indent \indent for population member e=1,2,...\\
+\indent \indent \indent \indent sample $\theta^e \sim P_{\mu}(\theta)$\\
+\indent \indent \indent \indent execute roll-outs under $\pi_{\theta^e}$\\
+\indent \indent \indent \indent  store ($\theta^e, U(e)$)\\
+\indent \indent end for\\
+\indent \indent $\mu^{i+1} = \arg\max_{\mu} \sum_{\tilde{e}} log P_{\mu}(\theta^{\tilde{e}})$\\
+\indent \indent where $\tilde{e}$ index over top p\% e \\
+\indent end for\\
+
+So this alg is searching $\theta$, which is parameterized by $\mu$, $\mu$ controls the distribution of $\theta$. at the end, we get a list of $\theta$ and corresponding $U(\theta)$. we choose the best $\theta$? 
+
+
+
 \section {policy gradient}
+
 Performance measure
 
 $$J(\theta)$$
