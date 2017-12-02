@@ -887,7 +887,10 @@ GloVe
 	
 	target value is often approximated as in bellman-equation.
 	In TD(0), $v_{\pi}(s) = R+\gamma v_{\pi}(s')$
-	
+	\item $\lambda$ - Return
+	$$G_t^{\lambda} = (1 - \lambda) \sum_{n=1}^\infty \lambda ^ {(n-1)} G_{t:t+n}$$
+	where
+	$$G_{t:t+n} = \sum_{n=1}^{n} \gamma^{n-1}R_t + \gamma^{n} \hat{v}(s_{t+n}, w_{t+n-1})$$
 	\item Eligibility traces
 	
 	
@@ -1006,7 +1009,7 @@ R(\tau)] \\
 \end{align}
 
 
-\section {policy gradient}
+\section {Policy Gradient}
 
 
 Performance measure
