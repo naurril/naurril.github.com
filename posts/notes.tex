@@ -841,7 +841,7 @@ GloVe
 \chapter{Reinforcement learning}
 
 
-\section{concepts}
+\section{Concepts}
 \begin{itemize}
 	\item General policy iteration
 	
@@ -864,6 +864,7 @@ GloVe
 	\item Importance sampling
 	\item Q-learning
 	\item Sarsa
+	\item sarsa expected
 	\item n-step bootstrapping
 	
 	n-step bootstrapping unifies 1-stop TD learning (one end) and episode monte-carlo learning (the other end). It just uses N-step state/action reward to update value function.
@@ -888,6 +889,9 @@ GloVe
 	In TD(0), $v_{\pi}(s) = R+\gamma v_{\pi}(s')$
 	
 	\item Eligibility traces
+	
+	
+	
 	\item Policy gradient
 	\item Actor critic
 	\item Deep Q learning
@@ -919,7 +923,16 @@ GloVe
 	
 	
 \end{itemize}
+
+\section {Derivative free methods}
+
+cross entropy methods\\
+finite differences\\
+fixing random seeds
+
 \section {Cross Entropy Methods (CEM)}
+
+It's also called evolutionary methods.
 
 The name of cross entropy methods comes from the cross-entropy (KL) distance. It has two phase:
 
@@ -937,7 +950,7 @@ CEM views U as a black box, ignores all other information other than U collected
 
 population $P_{\mu^i}(\theta) $
 
-pseudo code for CEM:
+pseudo code for CEM
 
 \noindent \indent for iter = 1,2...\\
 \indent \indent for population member e=1,2,...\\
@@ -949,11 +962,52 @@ pseudo code for CEM:
 \indent \indent where $\tilde{e}$ index over top p\% e \\
 \indent end for\\
 
-So this alg is searching $\theta$, which is parameterized by $\mu$, $\mu$ controls the distribution of $\theta$. at the end, we get a list of $\theta$ and corresponding $U(\theta)$. we choose the best $\theta$? 
+So this alg is searching $\theta$, which is parameterized by $\mu$, $\mu$ controls the distribution of $\theta$. at the end, we get a list of $\theta$ and corresponding $U(\theta)$. we choose the best $\theta$? and we have to model $\theta$ by parameter $\mu$?
 
+simple, need full episodes.
+caveats: parameters cannot be too many!
+
+\section {Likelihood ratio policy gradient}
+
+let $\tau$ be the trajectory, a action sequence $s_0,u_0, s_1, u_1,...$, and $R(\tau) = \sum_{t=0}^H R(s_t,u_t)$ be total rewards.
+$$U(\theta) = E[\sum_{t=0}^H R(s_t, u_t); \pi_{\theta}] = \sum_{\tau}P(\tau, \theta)R(\tau)$$
+
+our goal is to find $\theta$:
+$$\max_{\theta}U_{\theta} = \max_{\theta} \sum_{\tau}P(\tau, \theta)R(\tau) $$
+
+the gradient of U is :
+\begin{align}
+\nabla_{\theta}U &= \sum_{\tau}\nabla_{\theta}P(\tau, \theta)R(\tau)\\
+		&= \sum_{\tau} P(\tau; \theta) {\nabla_{\theta}P(\tau, \theta) \over P(\tau, \theta) }R(\tau)\\
+		&= \sum_{\tau} P(\tau; \theta) {\nabla_{\theta}log P(\tau, \theta)}R(\tau)\\
+		&= E_{\tau,\theta}[{\nabla_{\theta}log P(\tau, \theta)}R(\tau)]
+\end{align}
+
+it's possible to derive this equation from importance sampling view:
+
+\begin{align}
+U(\theta) &= E_{\tau \sim \theta_{old}} 
+             [{P (\tau | \theta) 
+             	\over 
+              {P(\tau | \theta_{old})}}
+              R(\tau)]\\
+\nabla_{\theta} U(\theta) &= E_{\tau \sim \theta_{old}} 
+[{\nabla_{\theta} P (\tau | \theta) 
+	\over 
+	{P(\tau | \theta_{old})}}
+R(\tau)]\\
+\nabla_{\theta} U(\theta) |_{\theta = \theta_{old}} &= E_{\tau \sim \theta_{old}} 
+[{\nabla_{\theta} P (\tau | \theta_{old}) 
+	\over 
+	{P(\tau | \theta_{old})}}
+R(\tau)] \\
+&= E_{\tau \sim \theta_{old}} 
+[\nabla_{\theta} log P (\tau | \theta_{old}) R(\tau)]
+\end{align}
 
 
 \section {policy gradient}
+
 
 Performance measure
 
@@ -966,6 +1020,8 @@ $$\pi(a|s,\theta) = {{exp(h(a,s,\theta))}\over{\sum_b{exp(h(b,s,\theta))}}}$$
 if we use a linear apporximation for h, it's
 $$h(s,a,\theta) = \theta^Tx(s,a)$$
 where x is the feature vector.
+
+by above formula, we are modeling action selection probability distribution.
 
 advantage of policy gradient: selecting actions according to softmax can approach a deterministic policy, while with $\epsilon$-greedy selection by action values there is always a probability of $\epsilon$ selecting random values.
 although we can use softmax of action values but that alone cannot allow the policy to approach deterministic, because action or state values is designed to approach real action/state value, this make them impossible to be 1 or 0 as of the probability.
