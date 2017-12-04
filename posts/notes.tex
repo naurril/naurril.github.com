@@ -886,7 +886,7 @@ GloVe
 	for action values, use the same method as for state values.
 	\item Importance sampling
 	
-	
+	use importance sampling to learn off-policy.
 	
 	
 	\item Q-learning
@@ -948,6 +948,21 @@ GloVe
 	It's kind of like convolution.
 	
 	\item Policy gradient
+	\item Policy gradient theorem
+	
+	This theorem says that policy gradient is independant of the state distribution. (Independant of the model dynamics.) Reinforcement Learning: An introduction gives an proof for episodidc case, but a much easy proof is provided in Pieter Abbeel's lecture (Youtube). refer to likelihood ratio policy gradient.
+	
+	
+	$$\nabla J(\theta) = \propto \sum_s \mu(s) \sum_a q_{\pi}(s,a) \nabla_{\theta} \pi(a | s, \theta)$$
+	
+	\item Difference between policy gradient and function approximation
+	
+	\begin{enumerate}
+		\item Q/V value function approximation uses 'state distribution ($\mu$)' while PD doesn't.
+		\item PD is actually gradient ascent
+		\item FD iterate for each step, PD?
+	\end{enumerate}
+	
 	\item Actor critic
 	\item Deep Q learning
 	
@@ -1080,6 +1095,21 @@ by above formula, we are modeling action selection probability distribution.
 
 advantage of policy gradient: selecting actions according to softmax can approach a deterministic policy, while with $\epsilon$-greedy selection by action values there is always a probability of $\epsilon$ selecting random values.
 although we can use softmax of action values but that alone cannot allow the policy to approach deterministic, because action or state values is designed to approach real action/state value, this make them impossible to be 1 or 0 as of the probability.
+
+Define $J(\theta) = v_{\pi_{\theta}}(s_0)$, policy gradient theorm tells 
+
+\begin{align}
+\nabla J(\theta) &= \propto \sum_s \mu(s) \sum_a q_{\pi}(s,a) \nabla_{\theta} \pi(a | s, \theta) \\
+&= E_{\pi}[\sum_a q_{\pi}(s,a) \nabla_{\theta} \pi(a | s, \theta)] \\
+&= E_{\pi}[\sum_a \pi(a|s, \theta) q_{\pi}(s,a) {\nabla_{\theta} \pi(a | s, \theta) \over {\pi(a|s, \theta)}}] \\
+&= E_{\pi} [G_t {\nabla_{\theta} \ln \pi(A_t | S_t, \theta)}]
+\end{align}
+
+this formula gives the REINFORCE algorithm. for each episolde, for each step, 
+$$\theta = \theta + \alpha G_t {\nabla_{\theta} \ln \pi(A_t | S_t, \theta)}$$
+
+$\nabla_{\theta} \ln \pi(A_t | S_t, \theta)$ is called \textit{eligibility vector}.
+
 
 \section {Actor-Critic}
 
