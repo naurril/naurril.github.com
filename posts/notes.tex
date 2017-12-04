@@ -57,21 +57,42 @@ $$p(t|X,w,\beta) = \prod_n N(t_n|w^t\phi(x_n), \beta^{-1}) $$
 
 maximize the likelihood, or the logarithm of the likelihood, is equal to minimize the sum of squared error, and at last get the same result as the least squares.
 
-if assume other density distribution, we get different model. e.g. for laplacian noise, $p(\epsilon) = {\frac 1 {2a}} e^{-\frac {|z|} {a}}$, we get model $\hat{x} = argmin_x |ax-y|_1$
+(need proof, 05Dec2017)If assume other density distribution, we get different model. e.g. for laplacian noise, $p(\epsilon) = {\frac 1 {2a}} e^{-\frac {|z|} {a}}$, we get model $\hat{x} = argmin_x |ax-y|_1$
+
+\section{Bayesian}
+According to Bayesian formula:
+$$ p(w|X,t) = \frac {p(t|X,w,\beta) * p(w)} {\sum_\beta  p(t|X,w,\beta) * p(w)} $$
+
+Given that $p(w|\alpha) = N(0,\alpha I)$ (isotropic Gaussian with zero mean), maximize the above function is same as minimize $|y-t|^2 + \alpha w^Tw$. This is squared errors plus ridge regularization
+
+Q: how to interpret lasso regression with bayesian theory?
 
 \section {LDA}
 
 It's said, that LDA is equivalent to liner regression, for two classes problems.
 
+$$ P(Y=k|X=x) = \frac {P(X=x|y=k) * P(y=k)}  {\Sigma_l P(X=x|y=l) * P(y=l) }$$
+prior probability: $P(Y=k)$   
+suppose $P(X=x|y=l)$ has normal distribution, and has equal variance for all $l$. then, to get the largest value of $P(Y=k|X=x)$, we need only to get the largest nominator in the right part.  
+let $\pi_k = P(y=k)$
+the formula above have same denominator for each class k, we need only compute the nominator. plug in the normal distribution formula, we get
+$$ d_k(x) = \pi_k{\frac 1 {\sqrt{2\pi} \sigma }} exp({-{\frac 1 {2 \sigma^2}}(x - \mu_k)^2}) $$  
+taking the log we get:  
+$$log(d_k(x)) = log(\pi_k) -{1 \over 2 \sigma^2}(x - \mu_k)^2 - log(\sqrt{2\pi} \sigma) $$  
+the last item is the same for all k, so we can ignore it also.  
+and for given x, $x^2 \over {2 \sigma^2}$ is also a constant, at last we get:  
+$$log(\pi_k) + {\mu_k x \over \sigma^2} - {\mu_k^2 \over 2 \sigma^2}$$
+we can assign  x the class k for which the above formula is largest.
+
+
 \section{Softmax}
 
-\section{Bayesian}
-According to Bayesian formula:
-  $$ p(w|X,t) = \frac {p(t|X,w,\beta) * p(w)} {\sum_\beta  p(t|X,w,\beta) * p(w)} $$
+softmax is also called normalized exponential.
+$$\mu_k = {exp(\eta_k) \over {1 + \sum_j exp(\eta_j)}}$$
 
-Given that $p(w|\alpha) = N(0,\alpha I)$ (isotropic Gaussian with zero mean), maximize the above function is same as minimize $|y-t|^2 + \alpha w^Tw$. This is squared errors plus ridge regularization
+some author doesn't use +1 version. the denominator is just the sum of exponential. Adding 1 is to protect it from being 0.
 
-Q: how to interpret lasso regression with bayesian theory?
+
 
 \section{Kernel methods}
 regularized sum of squares, 
@@ -250,9 +271,11 @@ $$R^2 = {\frac {TSS - RSS} {TSS}}$$
 TSS total sum of squares. 
 $$TSS = \Sigma_i(y_i - E(y))^2$$  
 RSS residual sum of squares. 
-$$RSS = \Sigma(y_i - y)^2$$
+$$RSS = \Sigma(y_i - \hat{y})^2$$
 
 R squared is the proportion of the variance.
+
+(05Dec2017)$R^2$ has 2 different definition. Regression sum of squares, defined as $\sum(\hat{y} - E(y))^2$. Find out more details.
 
 \item p-value  
 \item null hypothesis (H) - assume null hypothesis, compute p-value, which shows the probability that the data is observed given that H is true. this is to say, p = P(D|H), the posterior probability? refer to chapter 37 of [1] and chapter 3 of [2]
@@ -260,18 +283,6 @@ R squared is the proportion of the variance.
 \item alternative hypothesis
 
 \item LDA  
-$$ P(Y=k|X=x) = \frac {P(X=x|y=k) * P(y=k)}  {\Sigma_l P(X=x|y=l) * P(y=l) }$$
-prior probability: $P(Y=k)$   
-suppose $P(X=x|y=l)$ has normal distribution, and has equal variance for all $l$. then, to get the largest value of $P(Y=k|X=x)$, we need only to get the largest nominator in the right part.  
-let $\pi_k = P(y=k)$
-the formula above have same denominator for each class k, we need only compute the nominator. plug in the normal distribution formula, we get
-$$ d_k(x) = \pi_k{\frac 1 {\sqrt{2\pi} \sigma }} exp({-{\frac 1 {2 \sigma^2}}(x - \mu_k)^2}) $$  
-taking the log we get:  
-$$log(d_k(x)) = log(\pi_k) -{1 \over 2 \sigma^2}(x - \mu_k)^2 - log(\sqrt{2\pi} \sigma) $$  
-the last item is the same for all k, so we can ignore it also.  
-and for given x, $x^2 \over {2 \sigma^2}$ is also a constant, at last we get:  
-$$log(\pi_k) + {\mu_k x \over \sigma^2} - {\mu_k^2 \over 2 \sigma^2}$$
-we can assign  x the class k for which the above formula is largest.
 
 \end{itemize}
 
@@ -1037,43 +1048,7 @@ So this alg is searching $\theta$, which is parameterized by $\mu$, $\mu$ contro
 simple, need full episodes.
 caveats: parameters cannot be too many!
 
-\section {Likelihood ratio policy gradient}
 
-let $\tau$ be the trajectory, a action sequence $s_0,u_0, s_1, u_1,...$, and $R(\tau) = \sum_{t=0}^H R(s_t,u_t)$ be total rewards.
-$$U(\theta) = E[\sum_{t=0}^H R(s_t, u_t); \pi_{\theta}] = \sum_{\tau}P(\tau, \theta)R(\tau)$$
-
-our goal is to find $\theta$:
-$$\max_{\theta}U_{\theta} = \max_{\theta} \sum_{\tau}P(\tau, \theta)R(\tau) $$
-
-the gradient of U is :
-\begin{align}
-\nabla_{\theta}U &= \sum_{\tau}\nabla_{\theta}P(\tau, \theta)R(\tau)\\
-		&= \sum_{\tau} P(\tau; \theta) {\nabla_{\theta}P(\tau, \theta) \over P(\tau, \theta) }R(\tau)\\
-		&= \sum_{\tau} P(\tau; \theta) {\nabla_{\theta}log P(\tau, \theta)}R(\tau)\\
-		&= E_{\tau,\theta}[{\nabla_{\theta}log P(\tau, \theta)}R(\tau)]
-\end{align}
-
-it's possible to derive this equation from importance sampling view:
-
-\begin{align}
-U(\theta) &= E_{\tau \sim \theta_{old}} 
-             [{P (\tau | \theta) 
-             	\over 
-              {P(\tau | \theta_{old})}}
-              R(\tau)]\\
-\nabla_{\theta} U(\theta) &= E_{\tau \sim \theta_{old}} 
-[{\nabla_{\theta} P (\tau | \theta) 
-	\over 
-	{P(\tau | \theta_{old})}}
-R(\tau)]\\
-\nabla_{\theta} U(\theta) |_{\theta = \theta_{old}} &= E_{\tau \sim \theta_{old}} 
-[{\nabla_{\theta} P (\tau | \theta_{old}) 
-	\over 
-	{P(\tau | \theta_{old})}}
-R(\tau)] \\
-&= E_{\tau \sim \theta_{old}} 
-[\nabla_{\theta} log P (\tau | \theta_{old}) R(\tau)]
-\end{align}
 
 
 \section {Policy Gradient}
@@ -1110,8 +1085,60 @@ $$\theta = \theta + \alpha G_t {\nabla_{\theta} \ln \pi(A_t | S_t, \theta)}$$
 
 $\nabla_{\theta} \ln \pi(A_t | S_t, \theta)$ is called \textit{eligibility vector}.
 
+\subsection{policy gradient with baseline}
+
+$G_t$ is replaced with $G_t - b$ in REINFORCE algorithm, the baseline b can be used to reduce variance of policy update.
+
+\subsection{Finite difference methods}
+\subsection {Likelihood ratio methods}
+
+
+
+let $\tau$ be the trajectory, a action sequence $s_0,u_0, s_1, u_1,...$, and $R(\tau) = \sum_{t=0}^H R(s_t,u_t)$ be total rewards.
+$$U(\theta) = E[\sum_{t=0}^H R(s_t, u_t); \pi_{\theta}] = \sum_{\tau}P(\tau, \theta)R(\tau)$$
+
+our goal is to find $\theta$:
+$$\max_{\theta}U_{\theta} = \max_{\theta} \sum_{\tau}P(\tau, \theta)R(\tau) $$
+
+the gradient of U is :
+\begin{align}
+\nabla_{\theta}U &= \sum_{\tau}\nabla_{\theta}P(\tau, \theta)R(\tau)\\
+&= \sum_{\tau} P(\tau; \theta) {\nabla_{\theta}P(\tau, \theta) \over P(\tau, \theta) }R(\tau)\\
+&= \sum_{\tau} P(\tau; \theta) {\nabla_{\theta}log P(\tau, \theta)}R(\tau)\\
+&= E_{\tau,\theta}[{\nabla_{\theta}log P(\tau, \theta)}R(\tau)]
+\end{align}
+
+it's possible to derive this equation from importance sampling view:
+
+\begin{align}
+U(\theta) &= E_{\tau \sim \theta_{old}} 
+[{P (\tau | \theta) 
+	\over 
+	{P(\tau | \theta_{old})}}
+R(\tau)]\\
+\nabla_{\theta} U(\theta) &= E_{\tau \sim \theta_{old}} 
+[{\nabla_{\theta} P (\tau | \theta) 
+	\over 
+	{P(\tau | \theta_{old})}}
+R(\tau)]\\
+\nabla_{\theta} U(\theta) |_{\theta = \theta_{old}} &= E_{\tau \sim \theta_{old}} 
+[{\nabla_{\theta} P (\tau | \theta_{old}) 
+	\over 
+	{P(\tau | \theta_{old})}}
+R(\tau)] \\
+&= E_{\tau \sim \theta_{old}} 
+[\nabla_{\theta} log P (\tau | \theta_{old}) R(\tau)]
+\end{align}
+
+\subsubsection{vanilla policy gradient (VPG)}
+\subsubsection{Natural policy gradient (NPG)}
 
 \section {Actor-Critic}
 
 \chapter {Numerical analysis}
+
+In numerical analysis, the 4 basic operations (+-*/) cause no problem except the subtraction (-), where cancellation causes round error to be significant, compared to operation result.
+
+More tricks here.
+
 \end{document}
