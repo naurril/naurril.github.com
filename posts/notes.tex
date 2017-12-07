@@ -483,7 +483,36 @@ $p(z) / q(z)$ is called likelihood ratio. (note that it is different from the on
 The importance sampling has two motives: 1) original distribution p(z) is difficult to sample from, or 2) reduce estimation variance. (ref wikipedia.org)
 
 
+\section {Approximate Inference}
 
+\subsection{variational inference}
+
+ref: 1601.00670.pdf
+
+For latent variable z, data x, we need to compute $p(z|x)$, or p(x).
+
+from a family of distribution L, we find the best one to approximate $p(z|x)$
+
+$$q^*(z) = \arg \min_q KL(q(z) \Vert (p(z|x))$$
+
+finally we approximate $p(z|x)$ with $q^*$
+
+so variational inference turns the inference problem into an optimization problem.
+
+
+relations to other domains:1)neural networks, 2)mcmc, 3)EM algorithm, 4)Gibbs sampler
+
+
+basic ideas:
+1)mean-field inference
+2)coordinate-ascent optimization
+
+problem
+
+$$p(z|x) = {p(x,z) \over {p(x)}}$$
+
+p(x) is the marginal density of the ovservations, called \textit{evidence}.
+$$p(x) = \int p(x,z)dz$$
 \chapter{Math}
 
 \section{SVD}   
@@ -1132,6 +1161,12 @@ R(\tau)] \\
 
 \subsubsection{vanilla policy gradient (VPG)}
 \subsubsection{Natural policy gradient (NPG)}
+
+\subsubsection{Trust Region Policy Gradient (TRPO)}
+
+lte $\eta(\pi) $ be accumulated reward, 
+$$\eta(\pi) = E_{s_0,a_0,...}\sum_{t=0}^{\infty} \gamma^t r(s_t)]$$
+
 
 \section {Actor-Critic}
 
