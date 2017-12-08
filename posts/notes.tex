@@ -22,6 +22,8 @@ predict value \textbf{y(x)}
 Sometimes we use input transformation, to replace x with $\phi(x)$ (basis function), a N*D matrix, also called design matrix $\Phi$. Design matrix is often fixed non-linear functions of input variables, since it would be not necessary if it's linear(parameter vector w can cover this condition). 
 \\
 
+
+
 Candidate of basis function
 \begin{itemize}
 	\item powers of x, $x^j$
@@ -483,6 +485,7 @@ $p(z) / q(z)$ is called likelihood ratio. (note that it is different from the on
 The importance sampling has two motives: 1) original distribution p(z) is difficult to sample from, or 2) reduce estimation variance. (ref wikipedia.org)
 
 
+
 \section {Approximate Inference}
 
 \subsection{variational inference}
@@ -513,6 +516,9 @@ $$p(z|x) = {p(x,z) \over {p(x)}}$$
 
 p(x) is the marginal density of the ovservations, called \textit{evidence}.
 $$p(x) = \int p(x,z)dz$$
+
+\subsection{Gibbs sampling}
+
 \chapter{Math}
 
 \section{SVD}   
