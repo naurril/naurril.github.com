@@ -439,6 +439,10 @@ just give a big stop lenght, and shrink it slowly. then we can avoid problem of 
 
 \end{itemize}
 
+\section natural gradient
+\section SGD
+\section AMS
+
 \chapter{statistics}
 
 \begin{itemize}
@@ -482,7 +486,26 @@ $p(z) / q(z)$ is called likelihood ratio. (note that it is different from the on
 
 The importance sampling has two motives: 1) original distribution p(z) is difficult to sample from, or 2) reduce estimation variance. (ref wikipedia.org)
 
+\subsection{Noise contrastive estimation}
 
+(used in word embedding?)
+
+\section{Approximate Inference}
+
+\subsection{Variational Inference}
+
+Variational Inference is related to calculus of variation. variational methods has nothing intrinsically approximate, but it provide ways to find approximate solutions.
+
+log marginal probability
+$$\ln p(X) = \mathcal{L}(q) + KL(q || p)$$
+where
+$$\mathcal{L}(q) = \int q(Z) ln{p(X,Y) \over {q(Z)}} dZ $$
+$$KL(q \Vert p) = - \int q(Z) \ln \left \{ { p(Z \vert X)\over {q(Z)} } \right \} dZ$$
+
+where p(X) is assumed difficult to optimize, and q(z) is an arbitrary distribution, 
+$$\mathcal{L}(q) + KL(q \Vert p) = \int q(Z) ln(p(X)) dZ = \ln p(X) $$
+ 
+ because $KL(q \Vert p) \geq 0$, $\mathcal{L}(q)$ becomes the lower bound of $\ln p(X)$
 
 \chapter{Math}
 
