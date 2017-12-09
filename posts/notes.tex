@@ -537,8 +537,32 @@ problem
 
 $$p(z|x) = {p(x,z) \over {p(x)}}$$
 
-p(x) is the marginal density of the ovservations, called \textit{evidence}.
+p(x) is the marginal density of the observations, called \textit{evidence}.
 $$p(x) = \int p(x,z)dz$$
+
+out goal if to find $q(z)$ the is close to $p(z|x)$,with respect to $KL(q|p)$
+
+\begin{align}
+KL(q(z)|p(z|x)) & = E_q[\log q(z)] - E_q[\log p(z|x)] \\
+&= E_q[\log q(z)] - E_q[\log p(z,x) - \log p(x)]\\
+&= E_q[\log q(z)] - E_q[\log p(z,x) + E_q[\log p(x)]\\
+&= E_q[\log q(z)] - E_q[\log p(z,x)] + \log p(x)\\
+\\
+\log p(x) &= KL(q(x) \Vert p(z|x)) +  E_q[\log p(z,x)]  - E_q[\log q(z)]\\
+&= KL(q(x) \Vert p(z|x)) + ELBO(q)
+\end{align}
+
+maximize Evidence Lower Bound (ELBO(q)) is equivalent to minimize KL divergence, since log q(x) is a constant w.r.t q(z).
+
+\begin{align}
+ELBO &= E_q[\log p(z,x)]  - E_q[\log q(z)] \\
+&= E_q[\log p(x|z)] + E_q[\log p(z)] - E_q[\log q(z)] \\
+&= E_q[\log p(x|z)] - KL[q(z) \Vert p(z)]
+\end{align}
+
+so maximize ELBO is to maximize log complete likelihood, and minimize KL divergence between prior probability p(z) and approximate prior q(z)
+
+
 
 \subsection{Gibbs sampling}
 
