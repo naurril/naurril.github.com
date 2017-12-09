@@ -577,11 +577,13 @@ $$q(z) = \prod_j q(z_j)$$
 ELBO(q) &= E_q[\log p(z,x)]  - E_q[\log q(z)] \\
         &= E_{q_j} [E_{q_{-j}} [\log p(z_j, z_{-j}, x)]] - E_{q_j} [E_{q_{-j}} [\log q(z)] ] \\
         &= E_{q_j} [E_{q_{-j}} [\log p(z_j, z_{-j}, x)]] - E_{q_j}[\log q(z_j)] +C \\
-        &= - KL_{q_j}(q(z_j) \Vert exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]])) +C
+        &= - KL_{q_j}(q(z_j) \Vert {exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]]) \over D}) +C
 \end{align}
 
+D is used to normalize the  exp then to make it a probability density of $z_j$. typically $$ D = \int exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]]) dz_j$$
+
 to maximize ELBO(q), the KL part should be 0, means
-$$q_{z_j}^* = exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]])$$
+$$q_{z_j}^* \propto exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]])$$
 
 note $-j$ above means $\{i | i \neq j\}$
 
