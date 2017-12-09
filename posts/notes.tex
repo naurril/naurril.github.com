@@ -492,10 +492,20 @@ The importance sampling has two motives: 1) original distribution p(z) is diffic
 
 (used in word embedding?)
 
+\subsection{Gibbs Sampling}
 \section{Approximate Inference}
 
 \subsection{Variational Inference}
 
+
+
+
+
+\section {Approximate Inference}
+
+\subsection{variational inference}
+
+\subsubsection {Problem}
 Variational Inference is related to calculus of variation. variational methods has nothing intrinsically approximate, but it provide ways to find approximate solutions.
 
 log marginal probability
@@ -506,12 +516,10 @@ $$KL(q \Vert p) = - \int q(Z) \ln \left \{ { p(Z \vert X)\over {q(Z)} } \right \
 
 where p(X) is assumed difficult to optimize, and q(z) is an arbitrary distribution, 
 $$\mathcal{L}(q) + KL(q \Vert p) = \int q(Z) ln(p(X)) dZ = \ln p(X) $$
- 
- because $KL(q \Vert p) \geq 0$, $\mathcal{L}(q)$ becomes the lower bound of $\ln p(X)$
 
-\section {Approximate Inference}
+because $KL(q \Vert p) \geq 0$, $\mathcal{L}(q)$ becomes the lower bound of $\ln p(X)$
 
-\subsection{variational inference}
+VI interpretted with Expectation is easier to understand.
 
 ref: 1601.00670.pdf
 
@@ -562,7 +570,22 @@ ELBO &= E_q[\log p(z,x)]  - E_q[\log q(z)] \\
 
 so maximize ELBO is to maximize log complete likelihood, and minimize KL divergence between prior probability p(z) and approximate prior q(z)
 
+\subsubsection{mean filed inference}
+latent variable z is factored into independent $\{z_j\}$, and 
+$$q(z) = \prod_j q(z_j)$$
+\begin{align}
+ELBO(q) &= E_q[\log p(z,x)]  - E_q[\log q(z)] \\
+        &= E_{q_j} [E_{q_{-j}} [\log p(z_j, z_{-j}, x)]] - E_{q_j} [E_{q_{-j}} [\log q(z)] ] \\
+        &= E_{q_j} [E_{q_{-j}} [\log p(z_j, z_{-j}, x)]] - E_{q_j}[\log q(z_j)] +C \\
+        &= - KL_{q_j}(q(z_j) \Vert exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]])) +C
+\end{align}
 
+to maximize ELBO(q), the KL part should be 0, means
+$$q_{z_j}^* = exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]])$$
+
+note $-j$ above means $\{i | i \neq j\}$
+
+with above result, we can optimize ELBO iteratively w.r.t. $z_j$ for each j.
 
 \subsection{Gibbs sampling}
 
