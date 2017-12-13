@@ -15,7 +15,7 @@ I write codes in c/c++, scala, common lisp, python, R, haskell, SQL, and JS. In 
 
 I implemented a [message parsing language] many years ago, it's a python like tiny programming language, can be used to parse messages in all kinds of protocols (If you have experience in telecommunication protocols, you definitly know what I am taking about). It's written in C++.
 
-
+$$\sigma$$
 
 
 [The Last Mile Rush]: https://tianchi.aliyun.com/competition/introduction.htm?spm=5176.100066.333.10.k8udBr&raceId=231581
