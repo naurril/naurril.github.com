@@ -229,6 +229,11 @@ Problems:
 	where N is the number of items, $n_{k1}$ is number of items rater 1 give category k.
 	
 	\item confusion matrix
+	A matrix that gives prediction pricision and recall rate for each class. usually used in multi-target object classification.
+	A perfect confusion matrix is the one with elements all being zero except in the main diagonal.
+	
+	this matrix can give information about the how the model is confusing about clasification results.
+	
 	\item Hamming loss
 	
 	ratio of different label.
@@ -255,7 +260,8 @@ best linear approximation to the true model.
 \item bias vs variance
 
 $MSE = BIAS^2 + VARIANCE$
-
+$$bias = E[\hat{y} - y]$$
+$$variance = [\hat{y} - E[\hat{y}]]^2$$
 in prml ,the author says that bias-variance trade-off is the product of frequentist viewpoint, and the maximum likelihood method's property, if we marginalize over parameters in a Bayesian setting this doesn't arise.
 
 
@@ -877,6 +883,11 @@ for such matrix, $x^TAx = 0$
 \section{Topology}
 
 \begin{itemize}
+	
+	\item definition 
+	
+	A set X with a topology T, is a collection of open subsets of X, that 1. $\emptyset$ and X is in T, 2. finite intersection of open sets is in T, 3. arbitrary union of open sets is in X.
+	
 	\item first-countable space
 	
 	A space X is said to be first-countable if each point has a countable neighbourhood basis (local base).
@@ -894,8 +905,70 @@ for such matrix, $x^TAx = 0$
 	how is open defined? or, is 'open' a predefined concept in topology, in other words, 'open' is not defined inside topology?
 	
 	
-	
 	\item closed
+	
+	closure
+	
+	bound - $\partial S = closure(S) - interior(S)$
+	
+	continuous map - inverse image of open set is open.
+	
+	homoemorphism - continuous bijective map with continuous inverse
+	
+	totological property - invariant under homoemorphism. e.g. size is not a topological property, but connectedness, path connectedness, compactness are.
+	
+	basis of a topology
+	
+	cover
+	
+	compactness - every open cover has a finite subcover.
+	
+	limit point compact
+	
+	sequentially compact
+	
+	local compactness
+	
+	connectedness
+	
+	path connected
+	
+	complete
+	
+	precompact
+	
+	paracompact
+	
+	Cauchy sequence
+	
+	dense subset
+	
+	subspace topology
+	
+	quotient topology
+	
+	disjoint topolody
+	
+	adjunct spaces
+	
+	topological groups
+	
+	locally finite: a collection A of subsets of X, is locally finite, if for all x in X, x has a neighborhood that intersect at most finitely many of sets in A. (lie: if A is finite, A is locally finite. infinite collections can also be locally finite, e.g. $A=\{(n,n+2)|n \in Z \}$, a countable collection of subsets need not be locally finite, e.g. (-n, n) with integer n.)
+	 
+	partitions of unity
+	
+	paracompact: a space X is paracompact if every open cover of X admits a locally finite open refinement. every compact space is paracompact, because a finite subcover is a locally finite open refinement. A monifold is paracompact because it's second countable (countable basis)
+	
+	paracompactness theorem: every second countable, locally compact housdorf topological space is paracompact.
+	
+	normal space - disjoint closed subsets can be seperated by open subsets.
+	
+	regular space - closed subset and point not in this subset can be seperated by open subsets.
+	
+	normal => regular => Housdorff
+	
+	
+	
 	
 	
 \end{itemize}
