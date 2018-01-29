@@ -913,16 +913,25 @@ for such matrix, $x^TAx = 0$
 	
 	continuous map - inverse image of open set is open.
 	
-	homoemorphism - continuous bijective map with continuous inverse
+	homeomorphism - continuous bijective map with continuous inverse
+	
+	local homeomorphism - every point $x \in X$ has a neighborhood $U \subset X$ such that f(U) is a open subset of Y, and f restricted to U is homeomorphism.
 	
 	totological property - invariant under homoemorphism. e.g. size is not a topological property, but connectedness, path connectedness, compactness are.
 	
 	basis of a topology
 	
-	cover
+	cover - a collection A of subsets of X, covers X, if for any point p of X, there exists a U in A such that p is in U.
 	
-	compactness - every open cover has a finite subcover.
+	open cover - each of the sets is open
 	
+	closed cover - each of the sets is closed.
+	
+	subcover - given cover U, $U' \subset U$ is also a cover, then U' is a subcover.
+	
+	compactness - every open cover has a finite subcover. 
+	
+	dense - a set A is said to be dense in X if $\overline{A}=X$
 	limit point compact
 	
 	sequentially compact
@@ -943,17 +952,20 @@ for such matrix, $x^TAx = 0$
 	
 	dense subset
 	
+	product topology of $X_1, X_2$ ... - $\boldmath{B} = \{U_1 \times U_2 ...\}$, where $U_i$ is open subsets of $X_i$
+	
 	subspace topology
 	
 	quotient topology
 	
 	disjoint topolody
 	
-	adjunct spaces
+	adjunct spaces - X and Y are topology spaces, A is closed subspace of Y, function $f: A \to X$ defines a equivalence relation $a eq f(a)$.
+	the quotient space of $X \bigsqcup Y$, by f, is called attaching Y into X along f. any $f^{-1}(x)$ is equivalent to $a \in A$.
 	
 	topological groups
 	
-	locally finite: a collection A of subsets of X, is locally finite, if for all x in X, x has a neighborhood that intersect at most finitely many of sets in A. (lie: if A is finite, A is locally finite. infinite collections can also be locally finite, e.g. $A=\{(n,n+2)|n \in Z \}$, a countable collection of subsets need not be locally finite, e.g. (-n, n) with integer n.)
+	locally finite: a collection A of subsets of X, is locally finite, if for all x in X, x has a neighborhood that intersect at most finitely many of sets in A. (lie: if A is finite, A is locally finite. infinite collections can also be locally finite, e.g. $A=\{(n,n+2)|n \in Z \}$, a countable collection of subsets need not be locally finite, e.g. (-n, n) with integer n. But no infinite collections of a compact space can be locally finite.)
 	 
 	partitions of unity
 	
@@ -968,9 +980,43 @@ for such matrix, $x^TAx = 0$
 	normal => regular => Housdorff
 	
 	
+	classification thoerem: every nonempty connected 1-manifold is homeomorphic to $R$ or $S^1$
 	
+	closed map:  takes closed subsets of X to closed subsets of Y.
 	
+	open map: takes open subsets of X to open subsets of Y.
 	
+	CW complexes, named after  J. H. C. Whitehead
+	
+	simplicial complexes
+	
+	$\mathbb{P}^{n}$ - real projective space of dimension n, set of one dimentional linear subspaces(lines through origin) in $\mathbb{R}^{n+1}$
+	
+	$\mathbb{P}^{2}$ - projective plane
+	
+	fundamental group
+	
+	homotopy - funtion f is homotopic to g, if continuous map H(x,t) exists that H(x,0)=f, h(x,1)=g. H deforms f to g continuously. 
+	homopotic relative to A if for all a in A, H(a,t)=f(a)=g(a).
+	freely homotopic if A is empty. a path homotopy is a homotopy that is stationary at the end points.
+	
+	path class is the path homotopy equivalence class.
+	
+	fundamental group of X based at p, is the set of path classes of loops based at p, denoted by $\pi_1(X, p)$
+	
+	simply connnected, means connnected, and every loop can be shrunk to  a constant loop. while its base point is fixeds.
+	
+	homomorphism: structure preserving map.
+	
+	retraction: if $A \subset X$, a continuous map $r: X \rightarrow A$ restricted on A is $id_A$, then r is a retraction, and A is a retract of X.
+	
+	a retract of a simply connected space is simply connected. this theorem can be used to check if a space is simply connected or not. we first find a retract, and if the retract is not simply connected, then we know the original space is not simply connected.
+	
+	topological invariance of $\pi_1$. homeomorphic spaces have isomorphic fundamental groups. specifically, if $\phi$ is homeomorphism, then $\phi_*: \pi_1(X, p) \rightarrow \pi_1(Y, \phi(p))$ is an isomorphism.
+	
+	topological group: a group endowed with a topology such that the multiplicatoin and inverse operation are continuous. every topological group is topologically homogeneous, that is, given any two points in the group, there is a homeomorphism that take one to the other. They look the same from the vantage of any point.
+	
+	discrete topology - given any set X, let the power set of X (P(X)) be the topology, so every subset of X is open.  this is called the discrete topology on X.
 \end{itemize}
 
 
