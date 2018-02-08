@@ -65,9 +65,18 @@ maximize the likelihood, or the logarithm of the likelihood, is equal to minimiz
 According to Bayesian formula:
 $$ p(w|X,t) = \frac {p(t|X,w,\beta) * p(w)} {\sum_\beta  p(t|X,w,\beta) * p(w)} $$
 
+$$ p(w|X,t) \propto  p(t|X,w,\beta) * p(w) $$
+
 Given that $p(w|\alpha) = N(0,\alpha I)$ (isotropic Gaussian with zero mean), maximize the above function is same as minimize $|y-t|^2 + \alpha w^Tw$. This is squared errors plus ridge regularization
 
+The first part is same as in MLE, and the second part is prior of w, with maximum log probability, the two parts added together as the cost, as in ridge regression.
+
 Q: how to interpret lasso regression with bayesian theory?
+A: 17Dec2017: laplace distribution is defined as
+$$f(w|\mu, b) = {1 \over {2b}} \exp (- {|w-\mu| \over b})$$
+$$\log f(w|\mu, b) = \log {1 \over {2b}} - {|w-\mu| \over b}$$
+
+take the logarithm of both sides, we get $(- {|x-\mu| \over b})$, let $\mu = 0$ we get $|x|$/b, which is the regularization part of lasso regression.
 
 \section {LDA}
 
@@ -255,6 +264,11 @@ best linear approximation to the true model.
 \item bias vs variance
 
 $MSE = BIAS^2 + VARIANCE$
+
+in prml ,the author says that bias-variance trade-off is the product of frequentist viewpoint, and the maximum likelihood method's property, if we marginalize over parameters in a Bayesian setting this doesn't arise.
+
+
+
 
 
 \item formula of standard error(SE)
@@ -519,7 +533,7 @@ $$\mathcal{L}(q) + KL(q \Vert p) = \int q(Z) ln(p(X)) dZ = \ln p(X) $$
 
 because $KL(q \Vert p) \geq 0$, $\mathcal{L}(q)$ becomes the lower bound of $\ln p(X)$
 
-VI interpretted with Expectation is easier to understand.
+VI interpreted with Expectation is easier to understand.
 
 ref: 1601.00670.pdf
 
@@ -581,10 +595,13 @@ ELBO(q) &= E_q[\log p(z,x)]  - E_q[\log q(z)] \\
         	D }] 
         + \log D
         - E_{q_j}[\log q(z_j)] +C \\
-        &= - KL_{q_j}(q(z_j) \Vert {exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]]) \over D}) +C
+        &= - KL_{q_j}(q(z_j) \Vert {exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]]) \over D}) +C\\
+        &= E_{q_j} [E_{q_{-j}} [\log p(z_j, z_{-j}, x)]] - E_{q_j}[\log q(z_j)] +C \\
+        &= E_{q_j} [\ln \exp(E_{q_{-j}} [\log p(z_j, z_{-j}, x))]] - E_{q_j}[\log q(z_j)] +C \\
+        &= - KL_{q_j}(q(z_j) \Vert {\exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]]) \over D}) +C
 \end{align}
 
-D is used to normalize the  exp then to make it a probability density of $z_j$. typically $$ D = \int exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]]) dz_j$$
+D is used to normalize the  exp and then to make it a probability density of $z_j$. typically $$ D = \int exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]]) dz_j$$
 
 to maximize ELBO(q), the KL part should be 0, means
 $$q_{z_j}^* \propto exp([E_{q_{-j}} [\log p(z_j, z_{-j}, x)]])$$
@@ -725,6 +742,9 @@ for such matrix, $x^TAx = 0$
 
 	\subsection{Concetps}
 		\begin{itemize}
+		\item variance
+		
+		$$\sigma^2 (X) =  \int_x p(x) (x - E[x])^2 = E[(x-E[x])^2]$$
 		\item central limit theorem
 		
 		\item likelihood 
