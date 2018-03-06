@@ -229,6 +229,11 @@ Problems:
 	where N is the number of items, $n_{k1}$ is number of items rater 1 give category k.
 	
 	\item confusion matrix
+	A matrix that gives prediction pricision and recall rate for each class. usually used in multi-target object classification.
+	A perfect confusion matrix is the one with elements all being zero except in the main diagonal.
+	
+	this matrix can give information about the how the model is confusing about clasification results.
+	
 	\item Hamming loss
 	
 	ratio of different label.
@@ -255,7 +260,8 @@ best linear approximation to the true model.
 \item bias vs variance
 
 $MSE = BIAS^2 + VARIANCE$
-
+$$bias = E[\hat{y} - y]$$
+$$variance = [\hat{y} - E[\hat{y}]]^2$$
 in prml ,the author says that bias-variance trade-off is the product of frequentist viewpoint, and the maximum likelihood method's property, if we marginalize over parameters in a Bayesian setting this doesn't arise.
 
 
@@ -883,6 +889,11 @@ scalar matrix: dI is called scalar matrix, a scalar multiple of the identity mat
 
 
 \begin{itemize}
+	
+	\item definition 
+	
+	A set X with a topology T, is a collection of open subsets of X, that 1. $\emptyset$ and X is in T, 2. finite intersection of open sets is in T, 3. arbitrary union of open sets is in X.
+	
 	\item first-countable space
 	
 	A space X is said to be first-countable if each point has a countable neighbourhood basis (local base).
@@ -896,15 +907,132 @@ scalar matrix: dI is called scalar matrix, a scalar multiple of the identity mat
 	A space X where all distinct points of X are pairwise neighborhood-seperable. If x, y are distinct points of X, there exists a neighbor U of x and a neighbor V of y such that $U \cap V = \emptyset $
 	
 	\item open
-	
+		'open' a predefined concept in topology, in other words, 'open' is not defined inside topology.
+		
 	how is open defined? or, is 'open' a predefined concept in topology, in other words, 'open' is not defined inside topology?
 	
 		
 	\item closed
 	
 	if complement of a set O is open, then O is closed. note that closed is not the other direction of open, since some set are both open or closed, or are neither open nor closed.
+
+	
+	closure
+	
+	bound - $\partial S = closure(S) - interior(S)$
+	
+	continuous map - inverse image of open set is open. in metric spaces, continuous functions is defined to be those whose image at a point y changes arbitrary small  given sufficient small change of input point x. formally, f is continuous at point c of its domain if, for any neighborhood N1(f(c)), there is a neighborhood N2(c), such that  f(x) is in N1 whenever x is in N2.  using this definition, it can be proved that the definition of continuous function in topology and in metric spaces are equivalent. [P.-A. Absil] defined it whis way, a basis is a collection of subsets of X, such that 1) any x in X is in at least one elements, 2) if x is in both subset a and subset b then there must be subset c which is subset of intersection of a and b, such that x is in c. it seems that the latter is more popular, Wolfram uses this def. but, are they equivalent?
+	
+	homeomorphism - continuous bijective map with continuous inverse
+	
+	local homeomorphism - every point $x \in X$ has a neighborhood $U \subset X$ such that f(U) is a open subset of Y, and f restricted to U is homeomorphism.
+	
+	totological property - invariant under homoemorphism. e.g. size is not a topological property, but connectedness, path connectedness, compactness are.
+	
+	basis of a topology - basis may be defined differently by authors, [Jonh M. Lee] defined it as a collection of some open subsets, such that any open subset is a union of some elements of it. 
+	
+	cover - a collection A of subsets of X, covers X, if for any point p of X, there exists a U in A such that p is in U.
+	
+	open cover - each of the sets is open
+	
+	closed cover - each of the sets is closed.
+	
+	subcover - given cover U, $U' \subset U$ is also a cover, then U' is a subcover.
+	
+	compactness - every open cover has a finite subcover. the compact set is defined in metric spaces as bounded and closed, Heine?Borel theorem says that the two definitions are equivalent.
+	
+	dense - a set A is said to be dense in X if $\overline{A}=X$
+	limit point compact
+	
+	sequentially compact
+	
+	local compactness
+	
+	connectedness
+	
+	path connected
+	
+	complete
+	
+	precompact
+	
+	paracompact
+	
+	Cauchy sequence
+	
+	dense subset
+	
+	product topology of $X_1, X_2$ ... - $\boldmath{B} = \{U_1 \times U_2 ...\}$, where $U_i$ is open subsets of $X_i$
+	
+	subspace topology
+	
+	quotient topology
+	
+	disjoint topolody
+	
+	adjunct spaces - X and Y are topology spaces, A is closed subspace of Y, function $f: A \to X$ defines a equivalence relation $a eq f(a)$.
+	the quotient space of $X \bigsqcup Y$, by f, is called attaching Y into X along f. any $f^{-1}(x)$ is equivalent to $a \in A$.
+	
+	topological groups
+	
+	locally finite: a collection A of subsets of X, is locally finite, if for all x in X, x has a neighborhood that intersect at most finitely many of sets in A. (lie: if A is finite, A is locally finite. infinite collections can also be locally finite, e.g. $A=\{(n,n+2)|n \in Z \}$, a countable collection of subsets need not be locally finite, e.g. (-n, n) with integer n. But no infinite collections of a compact space can be locally finite.)
+	 
+	partitions of unity
+	
+	paracompact: a space X is paracompact if every open cover of X admits a locally finite open refinement. every compact space is paracompact, because a finite subcover is a locally finite open refinement. A monifold is paracompact because it's second countable (countable basis)
+	
+	paracompactness theorem: every second countable, locally compact housdorf topological space is paracompact.
+	
+	normal space - disjoint closed subsets can be seperated by open subsets.
+	
+	regular space - closed subset and point not in this subset can be seperated by open subsets.
+	
+	normal => regular => Housdorff
 	
 	
+	classification thoerem: every nonempty connected 1-manifold is homeomorphic to $R$ or $S^1$
+	
+	closed map:  takes closed subsets of X to closed subsets of Y.
+	
+	open map: takes open subsets of X to open subsets of Y.
+	
+	CW complexes, named after  J. H. C. Whitehead
+	
+	simplicial complexes
+	
+	$\mathbb{P}^{n}$ - real projective space of dimension n, set of one dimentional linear subspaces(lines through origin) in $\mathbb{R}^{n+1}$
+	
+	$\mathbb{P}^{2}$ - projective plane
+	
+	fundamental group
+	
+	homotopy - funtion f is homotopic to g, if continuous map H(x,t) exists that H(x,0)=f, h(x,1)=g. H deforms f to g continuously. 
+	homopotic relative to A if for all a in A, H(a,t)=f(a)=g(a).
+	freely homotopic if A is empty. a path homotopy is a homotopy that is stationary at the end points.
+	
+	path class is the path homotopy equivalence class.
+	
+	fundamental group of X based at p, is the set of path classes of loops based at p, denoted by $\pi_1(X, p)$.
+	
+	simply connnected, means connnected, and every loop can be shrunk to  a constant loop. while its base point is fixeds.
+	
+	homomorphism: structure preserving map.
+	
+	retraction: if $A \subset X$, a continuous map $r: X \rightarrow A$ restricted on A is $id_A$, then r is a retraction, and A is a retract of X.
+	
+	a retract of a simply connected space is simply connected. this theorem can be used to check if a space is simply connected or not. we first find a retract, and if the retract is not simply connected, then we know the original space is not simply connected.
+	
+	topological invariance of $\pi_1$. homeomorphic spaces have isomorphic fundamental groups. specifically, if $\phi$ is homeomorphism, then $\phi_*: \pi_1(X, p) \rightarrow \pi_1(Y, \phi(p))$ is an isomorphism.
+	
+	topological group: a group endowed with a topology such that the multiplicatoin and inverse operation are continuous. every topological group is topologically homogeneous, that is, given any two points in the group, there is a homeomorphism that take one to the other. They look the same from the vantage of any point.
+	
+	discrete topology - given any set X, let the power set of X (P(X)) be the topology, so every subset of X is open.  this is called the discrete topology on X.
+	
+	trivial group is a group with only the identity element.
+	
+	fundamental group of a circle, $\pi_1(\mathbb{S}^1, 1)$ is an infinitly cyclic group generated by $\omega(s) = e^{2\pi i s}$
+	
+	degree - degree of a continuous map $\phi : \mathbb{S}^1 -> \mathbb{S}^1$ if the winding number of $\phi \circ \omega$, and $\omega : I -> \mathbb{S}^1$ is the standard generator of $\pi_1(S^1, 1)$.  it's denoted by $deg \phi$
 \end{itemize}
 
 
