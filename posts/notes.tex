@@ -684,7 +684,11 @@ anti-symmetric matrix:
 $-A = A^T$, 
 for such matrix, $x^TAx = 0$
 
+scalar matrix: dI is called scalar matrix, a scalar multiple of the identity matrix.
+
 \subsection {Cholesky decomposition}
+
+
 
 \begin{itemize}
 	\item Freobenius norm
@@ -897,6 +901,8 @@ for such matrix, $x^TAx = 0$
 
 \section{Topology}
 
+
+
 \begin{itemize}
 	
 	\item definition 
@@ -916,11 +922,15 @@ for such matrix, $x^TAx = 0$
 	A space X where all distinct points of X are pairwise neighborhood-seperable. If x, y are distinct points of X, there exists a neighbor U of x and a neighbor V of y such that $U \cap V = \emptyset $
 	
 	\item open
+		'open' a predefined concept in topology, in other words, 'open' is not defined inside topology.
+		
+	how is open defined? or, is 'open' a predefined concept in topology, in other words, 'open' is not defined inside topology?
 	
-	'open' a predefined concept in topology, in other words, 'open' is not defined inside topology.
-	
-	
+		
 	\item closed
+	
+	if complement of a set O is open, then O is closed. note that closed is not the other direction of open, since some set are both open or closed, or are neither open nor closed.
+
 	
 	closure
 	
@@ -1048,10 +1058,12 @@ for such matrix, $x^TAx = 0$
 	A bijection $\phi$ of a subset $U$ of $M$ onto an open subset of $R^d$ is called a d-dimentional chart of set M, denoted by  $(U, \phi)$
 	
 	\item {atlas}
+	
 	An atlas of $M$ into $R^d$ is a collections of charts $(U_{\alpha}, \phi_{\alpha })$ of $M$ such that 
 	
-	1) $\bigcup_{\alpha}U_{\alpha} = M$
-	2) the elements of an atlas overlap smoothly. if $U_{\alpha} \cup U_{\beta}  \neq \emptyset$, the sets $\phi_{\alpha}(U_{\alpha} \cap U_{\beta})$ and  $\phi_{\beta}(U_{\alpha} \cap U_{\beta})$ are open sets of $R^d$ and the changes of coordinates $\phi_{\beta} \circ \phi_{\alpha}^{-1} : R^d \to R^d $ is smooth.
+	1) $\bigcup_{\alpha}U_{\alpha} = M$\\
+	2) the elements of an atlas overlap smoothly. \\
+	if $U_{\alpha} \cup U_{\beta}  \neq \emptyset$, the sets $\phi_{\alpha}(U_{\alpha} \cap U_{\beta})$ and  $\phi_{\beta}(U_{\alpha} \cap U_{\beta})$ are open sets of $R^d$ and the changes of coordinates $\phi_{\beta} \circ \phi_{\alpha}^{-1} : R^d \to R^d $ is smooth.
 	
 	\item {manifold}
 	
@@ -1084,7 +1096,36 @@ for such matrix, $x^TAx = 0$
 	is it possible to use category theory to interpret some topics in matrix manifold?
 	
 \end{itemize}
-	
+
+
+\section {differential geometry}
+Homeomorphism: continuous function between topological spaces, that has a continuous inverse function.
+
+Diffeomorphism: smooth function that has a smooth inverse function. diffeomorphism is by definition a homeomorphism.
+
+For a manifold M, a map from U to M is called parametrization, and the inverse map is called coorindation.
+
+a manifold has dimension zero if each point p of m has a neighbor containing p alone.
+
+Inverse Function Theorem. If the derivative $  df(x) : R^k \to R^k$ is nonsingular,
+then $f$ maps any sufficiently small open set U' about x diffeomorphically onto an open set $f(U')$
+
+Question: why is the inverse function theorem the fundation of differential geometry?
+
+ fields
+  
+ vector fields: imagine every point is a vector.
+ 
+ bundle: a triple $(E, \pi, M)$, E is a smooth manifold called total space, M is smooth manifold called base space. $\pi$ is smooth map that is surjective, called projection map.
+ 
+ fibre: for a bundle $(E, \pi, M)$,  $p \in M$, fibre over p is the preimage of p over $\pi$
+ 
+ section: a section of a bundle, (E, $\pi$, M), a section is map $\sigma$ from base space to total space, (the other way from $\pi$), that $\pi \circ \sigma = id_M$
+ 
+ 
+ tangent bundle of smooth manifold
+ 
+ (M,O,d) a smooth mandifold, TM := disjoint union of all TpM.
 \chapter{Problems}
 
 Generative model: $p(y|x) = p(x|y)p(y)/p(x)$, models both input and output distributions explicitly or implicitly.
