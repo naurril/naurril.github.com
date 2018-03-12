@@ -1429,4 +1429,44 @@ In numerical analysis, the 4 basic operations (+-*/) cause no problem except the
 
 More tricks here.
 
+\chapter {Deep Learning}
+
+\section{Batch Normalization}
+
+Effects: 
+1) faster to train 2) less dependant on parameter initialization 3) regularization  effect, 4) remove the need of dropout
+
+
+Problems to solve: 
+initial convariat shifting - when parameters of previous lays are changed, their ouput changes also, and this means the inputs of later layers changes.
+
+Solution:
+normalize input for each layer.
+
+Implementation:\\
+1) Insert BN layer before or after activation, Ng says usually before activation. So does ResNet.
+
+2) At inference there is often only one sample, and in no way to calculate mean or standard diviation. So they are computed while training, with exponential decayed averaging. 
+
+3) in [deeping learning], the author says the major innovation is that "we back-propogate through these operations for computing the mean and the standard deviation, and for applying them to normalize H. This meas the gradient will never propose an operation that acts simply to increase the standard deviation and the mean of $h_i$, the normalization operations remove the effect of such an action and zero out its component in the gradient". not completely undersand this. It seems that the origial paper describes a different training procedure than implementation by keras or tensorflow. should try to make clear.
+
+\section{Object Detection and Segmentation}
+\subsection{RCNN series}
+\begin{itemize}
+	\item RCNN
+	
+	\item fast-RCNN
+	
+	Feature reused before generating class ids and bounding boxes.
+	
+	\item faster-RCNN
+	
+	RPN is proposed to generate ROIs.
+	
+	\item Mask RCNN
+	
+	A third head branch is added to generate instance masks. \\
+	ROI-Align replaced ROI-Pooling 
+	
+\end{itemize}
 \end{document}
