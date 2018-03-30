@@ -1450,6 +1450,17 @@ Implementation:\\
 
 3) in [deeping learning], the author says the major innovation is that "we back-propogate through these operations for computing the mean and the standard deviation, and for applying them to normalize H. This meas the gradient will never propose an operation that acts simply to increase the standard deviation and the mean of $h_i$, the normalization operations remove the effect of such an action and zero out its component in the gradient". not completely undersand this. It seems that the origial paper describes a different training procedure than implementation by keras or tensorflow. should try to make clear.
 
+
+1) how is batch norm applied to conv-layer?\\
+according to the original paper, it's applied to one feature map. i.e. for batch size n, and feature p*q, the actural batch size is n*p*q.\\
+for some tasks, such as rcnn, where the batch size is small, e.g. 2 or 4 (since the model is very large and memory hungry), in this situation, the BN may cause errors unacceptable.
+
+
+2) what are those batch-norm variaties? any advantages? group normalization, layer normalization.
+
+
+
+
 \section{Object Detection and Segmentation}
 \subsection{RCNN series}
 \begin{itemize}
