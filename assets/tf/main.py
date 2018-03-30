@@ -18,10 +18,13 @@ cross_entropy = tf.losses.sigmoid_cross_entropy(multi_class_labels=y,
                                                 logits=logits,
                                                 weights = 1)
 loss = tf.reduce_mean(cross_entropy)
+tf.summary.scalar('loss', loss)
 
 train_step = tf.train.AdamOptimizer(1e-4).minimize(loss)
 
 
+
+merged = tf.summary.merge_all()
 
 print('Saving graph to: %s' % graph_location)
 train_writer = tf.summary.FileWriter(graph_location)
@@ -33,10 +36,8 @@ print(vars)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
-for i in range(300):
+for i in range(100,200):
     batch_x, batch_y = data.get_one_batch()
-    train_step.run(session=sess, feed_dict={x: batch_x, y: batch_y})
-
-    ret = sess.run(loss, feed_dict={x: batch_x, y: batch_y})
-
+    ret, summary, _ = sess.run([loss, merged, train_step], feed_dict={x: batch_x, y: batch_y})
+    train_writer.add_summary(summary, i)
     print(i, ret)
