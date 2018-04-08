@@ -7,8 +7,10 @@ import random
 import numpy as np
 from skimage.transform import resize
 
-root_dir = r'/home/lie/kaggle/nuclei/input/'
-train_dir = root_dir + r"stage1_train/"
+#root_dir = r'/home/lie/kaggle/nuclei/input/'
+#train_dir = root_dir + r"stage1_train/"
+root_dir = r"E:/src/nuclei/data/"
+train_dir = root_dir + r"train/"
 def image_id_to_filename(id):
     return train_dir + "/" + id + r"/images/" + id + ".png"
 def image_id_to_mask_dir(id):
@@ -35,9 +37,9 @@ def sample_image_ids(batch_size):
 
 def load_one_img(id):
     img = imageio.imread(image_id_to_filename(id))[:, :, :3]
-    img = resize(img, [512, 512])
+    img = resize(img, [512, 512], mode='constant')
     masks = read_image_masks(id)
-    masks = resize(masks, [512, 512])
+    masks = resize(masks, [512, 512], mode='constant')
     masks = np.max(masks, axis=-1)
     masks = (masks > 0)*1
     return img,masks

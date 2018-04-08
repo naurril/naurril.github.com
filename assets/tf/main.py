@@ -36,7 +36,7 @@ print(vars)
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
-for i in range(100,200):
+for i in range(200,1000):
     batch_x, batch_y = data.get_one_batch()
     ret, summary, _ = sess.run([loss, merged, train_step], feed_dict={x: batch_x, y: batch_y})
     train_writer.add_summary(summary, i)
