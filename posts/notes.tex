@@ -467,10 +467,90 @@ just give a big stop lenght, and shrink it slowly. then we can avoid problem of 
 
 \chapter{statistics}
 
+\section{Inference}
+inference problems can be classified into 3 types: estimation, confidence sets, hypothesis testing.
+\subsection{point estimation}
 \begin{itemize}
-	\item point estimation
+\item point estimation\\
+point estimation means give a single best guess of some quantity of interest, i.e. a parameter, a cdf, a pdf, a expected value of random variable. 
+
+
+Estimation of a parameter should converge to true value if we collect more and more data. this is called consistent.
+
+
+point estimation is often contrasted with the interval estimation, i.e. confidence interval in frequentiest inference, or credible intervals in bayesian inference.
+
+\item sampling distribution\\
+distribution of a statistic, considered as a random variable.
+
+\item standard error\\
+standard error is the standard deviation of the sampling distribution. the se of mean of N normal-distributed random variables is $\sigma \over \sqrt{N}$
+
+
+\end{itemize}
+
+
+\subsection{confidence set}
+
+\begin{itemize}
+
+
+\item confidence interval\\
+
+interval that contains an unknown quantity with given frequency	\\
+1) definition\\
+2) how is it computed\\
+3) how is it implemented in R (algorithms e.g. LR in R gives confidence intervals by default)
+
+
+\item {z-table, z-score}\\
+for standard normal distribution curve, a z-score is a value in x-axis, z-table gives area under the curve between any two z-scores.
+
+
+\item {normal-based confidence interval}\\
+suppose $\hat{\theta}_n \approx N(\theta, \hat{se}^2) $
+Let $$C_n = (\hat{\theta}_n - z_{\alpha / 2} \hat{se},  \hat{\theta}_n + z_{\alpha / 2} \hat{se})$$
+then $$P(\theta \in C_n) \rightarrow 1-\alpha$$
+
+
+\item {Normal-based confidence interval calculation}\\
+https://www.wikihow.com/Calculate-Confidence-Interval
+$$ \overline{x} \pm z_{\alpha / 2} * {\sigma \over \sqrt{N}}$$
+
+where $\alpha$ is confidence level, i.e. $95\%$, $z_{\alpha / 2}$ is critical value, N is sample number. $\sigma$ is standard deviation of your target statistics.
+
+\end{itemize}
+\subsection{hypothesis testing}
+
+Formally if we partition the parameter space into two subspaces, $\Theta_0$ and $\Theta_1$, \textbf{Null hypothesis} is $\theta \in \Theta_0$, the \textbf{Alternative hypothesis} is $\theta \in \Theta_1$. we define a \textbf{reject region} R, if $x \in R$ we reject the Null hypothesis, otherwise we don't reject it. usually, $$R = \{x : T(x) > c\} $$ where T is a \textbf{test statistic}, and c is \textbf{critical value}. 
+
+Some sources define rejection region other way, e.g. a region of T(x) not of x.
+
+
+Rejecting Null hypothesis when Null hypothesis is true is called \textbf{type I error (false positive)}. Retaining Null hypothesis when alternative hypothesis is true is called \textbf{type II error (false negative)}.
+
+
+\textbf{power function} of a test is defined as $$\beta(\theta) = P_{\theta}(X \in R) $$, means the probability when X is in rejecting region under some value of $\theta$.  the \textbf{size} of a test is defined as the largest power function value when $H_0$ is true, i.e. $$\alpha = \sup_{\theta \in \Theta_0} \beta(\theta)$$
+
+
+\subsubsection{Wald test}
+testing $H_0: \theta = \theta_0$, $H_1: \theta \neq \theta_0$ and assuming $\hat{\theta}$ is asympotically normal: $$ {{\hat{\theta} - \theta_0} \over {\hat{se}}} \asymp N(0,1)  $$
+
+
+$$W =  {{\hat{\theta} - \theta_0} \over {\hat{se}}}$$
+	reject $H_0$ if $|W| > z_{\alpha /2}$
+
+\subsubsection{$\chi^2$ test}
+\subsubsection{permutation test}
+\subsubsection{likelihood ratio test}
+
+\section{Concepts}
+\begin{itemize}
+	
+	
+	
 	\item set estimation
-	\item confidence interval
+	
 	\item confidence set
 	\item sufficient statistics
 
@@ -493,6 +573,7 @@ goodness-of-fit test
 Null hypothesis, Alternative hypothesis
 
 \section {Monte Carlo statistics}
+
 \subsection {Importance sampling}
 to estimate expectation of form
 $$E(f) = \int f(z)p(z)dz$$
