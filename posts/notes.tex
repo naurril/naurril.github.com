@@ -271,7 +271,12 @@ best linear approximation to the true model.
 $MSE = BIAS^2 + VARIANCE$
 $$bias = E[\hat{y} - y]$$
 $$variance = [\hat{y} - E[\hat{y}]]^2$$
-in prml ,the author says that bias-variance trade-off is the product of frequentist viewpoint, and the maximum likelihood method's property, if we marginalize over parameters in a Bayesian setting this doesn't arise.
+
+
+$\hat{y}$ is estimator of y, consider it as a random variable, we can calculate its variance. [youtube, statistics for applications] named this MSE as estimator risk (or quadratic risk), and defined as $MSE = E[|\hat{y} - y|^2] = E[|\hat{y} - E[\hat{y}] + E[\hat{y}] - y|^2]$
+
+
+In prml ,the author says that bias-variance trade-off is the product of frequentist viewpoint, and the maximum likelihood method's property, if we marginalize over parameters in a Bayesian setting this doesn't arise.
 
 
 
@@ -469,6 +474,7 @@ just give a big stop lenght, and shrink it slowly. then we can avoid problem of 
 
 \section{Inference}
 inference problems can be classified into 3 types: estimation, confidence sets, hypothesis testing.
+
 \subsection{point estimation}
 \begin{itemize}
 \item point estimation\\
@@ -488,6 +494,23 @@ standard error is the standard deviation of the sampling distribution. the se of
 
 
 \end{itemize}
+
+\subsubsection {method of moments estimator}
+ the value of $\theta$ such that all moments of the distribution parameterized by this $\theta$ equal to corresponding sample moments. 
+ $$ \int x^j dF_{\hat{\theta}}(x)  = {1 \over n}\sum_{i=1}^n x_i^j $$
+
+\subsubsection {MLE}
+
+properties of MLE:
+\begin{list}{.}{ }
+	\item it is consistant
+	\item it is equivariant
+	\item it is asymptotically normal
+	\item it is asymptotically optimal or efficient
+	\item it is approximately the Bayes estimator	
+\end{list}
+
+Problem: when does MEL work well? and when not? When are the properties above hold?
 
 
 \subsection{confidence set}
@@ -569,8 +592,6 @@ $$W =  {{\hat{\theta} - \theta_0} \over {\hat{se}}}$$
 \subsection {check assumption}
 goodness-of-fit test
 
-\section {hypothesis testing}
-Null hypothesis, Alternative hypothesis
 
 \section {Monte Carlo statistics}
 
@@ -594,7 +615,7 @@ The importance sampling has two motives: 1) original distribution p(z) is diffic
 (used in word embedding?)
 
 \subsection{Gibbs Sampling}
-\section{Approximate Inference}
+
 
 \subsection{Variational Inference}
 
@@ -698,6 +719,17 @@ note $-j$ above means $\{i | i \neq j\}$
 with above result, we can optimize ELBO iteratively w.r.t. $z_j$ for each j.
 
 \subsection{Gibbs sampling}
+
+\subsection {statistics for application}
+
+minimize the max variant distance when we build an estimator is the ultimate target we should chase, but it is hard if not impossible to compute it, so we use Kullback Leibler divergence, which has some good properties for our purposes. note that max variant distance is truely a distance metric, but KL is not (so it is called divergence).
+
+For MLE, fisher information gives how sensitive the estimator is to change of $\theta$ (to be verified). and the variance of first derivative equals to minus expectation of second derivative. (to be verified also, and why is it useful?)
+
+\textbf{weierstress approximation theorem} any continuous function can be arbitrarily well approximated by polynomials.
+
+
+
 
 \chapter{Math}
 
@@ -850,15 +882,24 @@ scalar matrix: dI is called scalar matrix, a scalar multiple of the identity mat
 		\item What is a Moment Generating Function(MGF)?  
 		
 		
-		In probability theory and statistics, MGF is another way to describe a random variable besides probability density function or cumulative distribution function. However, notice that not all random variables have a MGF.
+		In probability theory and statistics, MGF is another way to describe a random variable besides probability density function (pdf) or cumulative distribution function (cdf). However, notice that not all random variables have a MGF.
 		
 		
 		MGF is defined as following:
 		$$M_x(X) = E[e^{tX}], t \in R$$ whenever this expectation exists. 
 
 		
-		\item Moment	
+		\item Moment
+		
 		from wikipedia: the points represent probability density, the zeroth moment is the total probability(one), the first moment is the mean, the second central moment is the variance, the third is the skewness, and fourth kurtosis.
+		
+		k-th \textbf{moment} is defined as expectation of $E[x^k]$
+		
+		k-th \textbf{central moment}: $E[(X-\mu)^k]$
+		
+		k-th \textbf{sample moment}: $$ {1 \over n}\sum_{j=1}^n {X_j^k} $$
+		
+		
 		\end{itemize}
 \section{Information Theory}
 \begin{itemize}
