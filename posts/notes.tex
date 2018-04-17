@@ -487,7 +487,9 @@ Estimation of a parameter should converge to true value if we collect more and m
 point estimation is often contrasted with the interval estimation, i.e. confidence interval in frequentiest inference, or credible intervals in bayesian inference.
 
 \item sampling distribution\\
-distribution of a statistic, considered as a random variable.
+distribution of a statistic, considered as a random variable. the name of sampling distribution comes from the fact that it depends on a random sample, and so its distribution is derived from the distribution of the sample.
+
+sampling distributions is commonly used by those statisticians who prefer not to use prior and posterior distributions.
 
 \item standard error\\
 standard error is the standard deviation of the sampling distribution. the se of mean of N normal-distributed random variables is $\sigma \over \sqrt{N}$
@@ -495,13 +497,21 @@ standard error is the standard deviation of the sampling distribution. the se of
 
 \end{itemize}
 
-\subsubsection {method of moments estimator}
+\subsubsection {Method of moments estimator}
  the value of $\theta$ such that all moments of the distribution parameterized by this $\theta$ equal to corresponding sample moments. 
  $$ \int x^j dF_{\hat{\theta}}(x)  = {1 \over n}\sum_{i=1}^n x_i^j $$
 
+ why we use this method? what is the rationale behind it?
+ 
+ we belive if for any function h(x), $\int h(x)f_\theta(x)dx = \int h(x) f_{\theta^*}(x)dx  = E_{\theta^*}[h(x)]$, then $f_\theta(x)$ is a good approximation of  $f_{\theta^*}(x)$. But obviously we cannot test all possible $h(x)$, so we use only polynormals  (according to weiersstress approximation theorem, any continuous function can be arbitrarily well approximated by polynormials), and we choose $x^k$ because any polynormials can be linearly combined by  $x^k$ where $ (k \in N)$. The last problem is what the upper bound of $k$ should we choose.
+ 
+ 
+
 \subsubsection {MLE}
 
-properties of MLE:
+MLE is introduced by R.A.Fisher in 1912.
+
+Properties of MLE:
 \begin{list}{.}{ }
 	\item it is consistant
 	\item it is equivariant
@@ -720,13 +730,13 @@ with above result, we can optimize ELBO iteratively w.r.t. $z_j$ for each j.
 
 \subsection{Gibbs sampling}
 
-\subsection {statistics for application}
+\section {statistics for application}
 
 minimize the max variant distance when we build an estimator is the ultimate target we should chase, but it is hard if not impossible to compute it, so we use Kullback Leibler divergence, which has some good properties for our purposes. note that max variant distance is truely a distance metric, but KL is not (so it is called divergence).
 
 For MLE, fisher information gives how sensitive the estimator is to change of $\theta$ (to be verified). and the variance of first derivative equals to minus expectation of second derivative. (to be verified also, and why is it useful?)
 
-\textbf{weierstress approximation theorem} any continuous function can be arbitrarily well approximated by polynomials.
+\textbf{weierstress approximation theorem} any continuous function can be arbitrarily well approximated by polynomials. 
 
 
 
@@ -1617,4 +1627,23 @@ for some tasks, such as rcnn, where the batch size is small, e.g. 2 or 4 (since 
 	ROI-Align replaced ROI-Pooling 
 	
 \end{itemize}
+
+
+\chapter{Miscs}
+\section{t-SNE}
+t-SNE, full name t-distributed stochastic neighbor embedding, t-distributed means student t distribution. it's an improvement of SNE. So what is SNE? SNE maps high-dimensional data into low dimensional space by reducing KL divergence of distributions of data points in high and low dimensions. For any point i, consider the similarities with all other points as conditional probabilities $P(j|i)$, then we get a distribution of all data points except i. The actual probability is measured as function of pair-distances. 
+$P(j|i) = {{\exp(-|x_i-x_j|^2 / {\sigma^2})} 
+          \over 
+          {\sum_{k\neq i}\exp(-|x_i-x_k|^2 / {\sigma^2})}}$
+For distribution on low-dimensional space, it's almost the same except that no $\sigma$ is involved. we denote it as $Q(j|i)$. the cost function is $\sum_i KL(P_i||Q_i)$. With iterative gradient descent methods, we find a representation in low dimension space. There are other details such as how to decide $\sigma$, refer to original paper.  
+SNE's cost function is non-convex, so in the original paper, a noise is added into gradient, to get effect of simulated annealing, it is hard to train, says the paper. the cost function looks a little complicated, but it's gradient is surprisingly simple. Choosing KL is not just a random decision, because KL is asymmetric and helps keep local structure in low dimension space. 
+
+Then comes t-SNE, 2 improvement, 1)symmetric sne, 2) t-distribution. By symmetric SNE a  joint probability $p(i,j)$ is used instead of conditional probability $p(j|i)$. $p(ij) = \exp(|x_i-x_j|^2) / \sum_{k\neq l} \exp(|x_k-x_l|^2)$, by this means all data point pairs constitute a total big distribution, and a single KL divergence is used as total cost. This reduces the complexities of the algorithm. But in original high dimension space, the joint distribution has a problem for outliers, all the pairs related to the outlier get very low probability, and contributes little to total cost and then their positions is not going to be well determined. so in t-SNE, $[p(i|j) + p(j|i)]/2n$ is used, while in low dimension space, the joint probability is used. the gradient is simpler than SNE. To alliviate the crowding problem, a student-t distribution is used in low-dimension space, (in high dimension space, gaussian is used).
+
+
+
+reducing the tendency to crowd points together.
+
+can be implemented via Barnes-Hut approximation
+
 \end{document}
