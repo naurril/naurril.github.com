@@ -6,7 +6,7 @@ categories: howtos
 commentIssueId: 1
 ---
 
-{% include mathjs %}
+
 
 MIT的课程 [18.650 statistics for applications](http://ocw.mit.edu/18-650F16)
 在Lecture 4 讲MLE的时候，和一般书本上来就给出MLE公式的方法不同，这里使用Max variant distance -> KLdivergence ->MLE的方式，初看到这个过程，内心感觉还是比较有意思的，简单记录如下
