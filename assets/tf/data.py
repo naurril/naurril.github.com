@@ -7,6 +7,8 @@ import random
 import numpy as np
 from skimage.transform import resize
 
+
+
 root_dir = r'/home/lie/kaggle/nuclei/input/'
 train_dir = root_dir + r"stage1_train/"
 def image_id_to_filename(id):
@@ -20,6 +22,8 @@ def read_image_ids():
     return ids
 
 image_ids = read_image_ids()
+def get_all_image_ids():
+    return image_ids
 
 def read_image_masks(image_id):
     image_file = train_dir + "/" + image_id +"/images/" + image_id + ".png"
@@ -52,6 +56,11 @@ def get_one_batch():
     mask = np.stack(mask)
 
     return img, mask
+
+def data_generator():
+    for id in image_ids:
+        yield load_one_img(id)
+
 
 if __name__ == "__main__":
     img, mask = get_one_batch()
