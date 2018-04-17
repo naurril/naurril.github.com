@@ -271,7 +271,12 @@ best linear approximation to the true model.
 $MSE = BIAS^2 + VARIANCE$
 $$bias = E[\hat{y} - y]$$
 $$variance = [\hat{y} - E[\hat{y}]]^2$$
-in prml ,the author says that bias-variance trade-off is the product of frequentist viewpoint, and the maximum likelihood method's property, if we marginalize over parameters in a Bayesian setting this doesn't arise.
+
+
+$\hat{y}$ is estimator of y, consider it as a random variable, we can calculate its variance. [youtube, statistics for applications] named this MSE as estimator risk (or quadratic risk), and defined as $MSE = E[|\hat{y} - y|^2] = E[|\hat{y} - E[\hat{y}] + E[\hat{y}] - y|^2]$
+
+
+In prml ,the author says that bias-variance trade-off is the product of frequentist viewpoint, and the maximum likelihood method's property, if we marginalize over parameters in a Bayesian setting this doesn't arise.
 
 
 
@@ -467,10 +472,118 @@ just give a big stop lenght, and shrink it slowly. then we can avoid problem of 
 
 \chapter{statistics}
 
+\section{Inference}
+inference problems can be classified into 3 types: estimation, confidence sets, hypothesis testing.
+
+\subsection{point estimation}
 \begin{itemize}
-	\item point estimation
+\item point estimation\\
+point estimation means give a single best guess of some quantity of interest, i.e. a parameter, a cdf, a pdf, a expected value of random variable. 
+
+
+Estimation of a parameter should converge to true value if we collect more and more data. this is called consistent.
+
+
+point estimation is often contrasted with the interval estimation, i.e. confidence interval in frequentiest inference, or credible intervals in bayesian inference.
+
+\item sampling distribution\\
+distribution of a statistic, considered as a random variable. the name of sampling distribution comes from the fact that it depends on a random sample, and so its distribution is derived from the distribution of the sample.
+
+sampling distributions is commonly used by those statisticians who prefer not to use prior and posterior distributions.
+
+\item standard error\\
+standard error is the standard deviation of the sampling distribution. the se of mean of N normal-distributed random variables is $\sigma \over \sqrt{N}$
+
+
+\end{itemize}
+
+\subsubsection {Method of moments estimator}
+ the value of $\theta$ such that all moments of the distribution parameterized by this $\theta$ equal to corresponding sample moments. 
+ $$ \int x^j dF_{\hat{\theta}}(x)  = {1 \over n}\sum_{i=1}^n x_i^j $$
+
+ why we use this method? what is the rationale behind it?
+ 
+ we belive if for any function h(x), $\int h(x)f_\theta(x)dx = \int h(x) f_{\theta^*}(x)dx  = E_{\theta^*}[h(x)]$, then $f_\theta(x)$ is a good approximation of  $f_{\theta^*}(x)$. But obviously we cannot test all possible $h(x)$, so we use only polynormals  (according to weiersstress approximation theorem, any continuous function can be arbitrarily well approximated by polynormials), and we choose $x^k$ because any polynormials can be linearly combined by  $x^k$ where $ (k \in N)$. The last problem is what the upper bound of $k$ should we choose.
+ 
+ 
+
+\subsubsection {MLE}
+
+MLE is introduced by R.A.Fisher in 1912.
+
+Properties of MLE:
+\begin{list}{.}{ }
+	\item it is consistant
+	\item it is equivariant
+	\item it is asymptotically normal
+	\item it is asymptotically optimal or efficient
+	\item it is approximately the Bayes estimator	
+\end{list}
+
+Problem: when does MEL work well? and when not? When are the properties above hold?
+
+
+\subsection{confidence set}
+
+\begin{itemize}
+
+
+\item confidence interval\\
+
+interval that contains an unknown quantity with given frequency	\\
+1) definition\\
+2) how is it computed\\
+3) how is it implemented in R (algorithms e.g. LR in R gives confidence intervals by default)
+
+
+\item {z-table, z-score}\\
+for standard normal distribution curve, a z-score is a value in x-axis, z-table gives area under the curve between any two z-scores.
+
+
+\item {normal-based confidence interval}\\
+suppose $\hat{\theta}_n \approx N(\theta, \hat{se}^2) $
+Let $$C_n = (\hat{\theta}_n - z_{\alpha / 2} \hat{se},  \hat{\theta}_n + z_{\alpha / 2} \hat{se})$$
+then $$P(\theta \in C_n) \rightarrow 1-\alpha$$
+
+
+\item {Normal-based confidence interval calculation}\\
+https://www.wikihow.com/Calculate-Confidence-Interval
+$$ \overline{x} \pm z_{\alpha / 2} * {\sigma \over \sqrt{N}}$$
+
+where $\alpha$ is confidence level, i.e. $95\%$, $z_{\alpha / 2}$ is critical value, N is sample number. $\sigma$ is standard deviation of your target statistics.
+
+\end{itemize}
+\subsection{hypothesis testing}
+
+Formally if we partition the parameter space into two subspaces, $\Theta_0$ and $\Theta_1$, \textbf{Null hypothesis} is $\theta \in \Theta_0$, the \textbf{Alternative hypothesis} is $\theta \in \Theta_1$. we define a \textbf{reject region} R, if $x \in R$ we reject the Null hypothesis, otherwise we don't reject it. usually, $$R = \{x : T(x) > c\} $$ where T is a \textbf{test statistic}, and c is \textbf{critical value}. 
+
+Some sources define rejection region other way, e.g. a region of T(x) not of x.
+
+
+Rejecting Null hypothesis when Null hypothesis is true is called \textbf{type I error (false positive)}. Retaining Null hypothesis when alternative hypothesis is true is called \textbf{type II error (false negative)}.
+
+
+\textbf{power function} of a test is defined as $$\beta(\theta) = P_{\theta}(X \in R) $$, means the probability when X is in rejecting region under some value of $\theta$.  the \textbf{size} of a test is defined as the largest power function value when $H_0$ is true, i.e. $$\alpha = \sup_{\theta \in \Theta_0} \beta(\theta)$$
+
+
+\subsubsection{Wald test}
+testing $H_0: \theta = \theta_0$, $H_1: \theta \neq \theta_0$ and assuming $\hat{\theta}$ is asympotically normal: $$ {{\hat{\theta} - \theta_0} \over {\hat{se}}} \asymp N(0,1)  $$
+
+
+$$W =  {{\hat{\theta} - \theta_0} \over {\hat{se}}}$$
+	reject $H_0$ if $|W| > z_{\alpha /2}$
+
+\subsubsection{$\chi^2$ test}
+\subsubsection{permutation test}
+\subsubsection{likelihood ratio test}
+
+\section{Concepts}
+\begin{itemize}
+	
+	
+	
 	\item set estimation
-	\item confidence interval
+	
 	\item confidence set
 	\item sufficient statistics
 
@@ -489,10 +602,9 @@ just give a big stop lenght, and shrink it slowly. then we can avoid problem of 
 \subsection {check assumption}
 goodness-of-fit test
 
-\section {hypothesis testing}
-Null hypothesis, Alternative hypothesis
 
 \section {Monte Carlo statistics}
+
 \subsection {Importance sampling}
 to estimate expectation of form
 $$E(f) = \int f(z)p(z)dz$$
@@ -513,7 +625,7 @@ The importance sampling has two motives: 1) original distribution p(z) is diffic
 (used in word embedding?)
 
 \subsection{Gibbs Sampling}
-\section{Approximate Inference}
+
 
 \subsection{Variational Inference}
 
@@ -617,6 +729,17 @@ note $-j$ above means $\{i | i \neq j\}$
 with above result, we can optimize ELBO iteratively w.r.t. $z_j$ for each j.
 
 \subsection{Gibbs sampling}
+
+\section {statistics for application}
+
+minimize the max variant distance when we build an estimator is the ultimate target we should chase, but it is hard if not impossible to compute it, so we use Kullback Leibler divergence, which has some good properties for our purposes. note that max variant distance is truely a distance metric, but KL is not (so it is called divergence).
+
+For MLE, fisher information gives how sensitive the estimator is to change of $\theta$ (to be verified). and the variance of first derivative equals to minus expectation of second derivative. (to be verified also, and why is it useful?)
+
+\textbf{weierstress approximation theorem} any continuous function can be arbitrarily well approximated by polynomials. 
+
+
+
 
 \chapter{Math}
 
@@ -769,15 +892,24 @@ scalar matrix: dI is called scalar matrix, a scalar multiple of the identity mat
 		\item What is a Moment Generating Function(MGF)?  
 		
 		
-		In probability theory and statistics, MGF is another way to describe a random variable besides probability density function or cumulative distribution function. However, notice that not all random variables have a MGF.
+		In probability theory and statistics, MGF is another way to describe a random variable besides probability density function (pdf) or cumulative distribution function (cdf). However, notice that not all random variables have a MGF.
 		
 		
 		MGF is defined as following:
 		$$M_x(X) = E[e^{tX}], t \in R$$ whenever this expectation exists. 
 
 		
-		\item Moment	
+		\item Moment
+		
 		from wikipedia: the points represent probability density, the zeroth moment is the total probability(one), the first moment is the mean, the second central moment is the variance, the third is the skewness, and fourth kurtosis.
+		
+		k-th \textbf{moment} is defined as expectation of $E[x^k]$
+		
+		k-th \textbf{central moment}: $E[(X-\mu)^k]$
+		
+		k-th \textbf{sample moment}: $$ {1 \over n}\sum_{j=1}^n {X_j^k} $$
+		
+		
 		\end{itemize}
 \section{Information Theory}
 \begin{itemize}
@@ -1465,6 +1597,17 @@ Implementation:\\
 
 3) in [deeping learning], the author says the major innovation is that "we back-propogate through these operations for computing the mean and the standard deviation, and for applying them to normalize H. This meas the gradient will never propose an operation that acts simply to increase the standard deviation and the mean of $h_i$, the normalization operations remove the effect of such an action and zero out its component in the gradient". not completely undersand this. It seems that the origial paper describes a different training procedure than implementation by keras or tensorflow. should try to make clear.
 
+
+1) how is batch norm applied to conv-layer?\\
+according to the original paper, it's applied to one feature map. i.e. for batch size n, and feature p*q, the actural batch size is n*p*q.\\
+for some tasks, such as rcnn, where the batch size is small, e.g. 2 or 4 (since the model is very large and memory hungry), in this situation, the BN may cause errors unacceptable.
+
+
+2) what are those batch-norm variaties? any advantages? group normalization, layer normalization.
+
+
+
+
 \section{Object Detection and Segmentation}
 \subsection{RCNN series}
 \begin{itemize}
@@ -1484,4 +1627,23 @@ Implementation:\\
 	ROI-Align replaced ROI-Pooling 
 	
 \end{itemize}
+
+
+\chapter{Miscs}
+\section{t-SNE}
+t-SNE, full name t-distributed stochastic neighbor embedding, t-distributed means student t distribution. it's an improvement of SNE. So what is SNE? SNE maps high-dimensional data into low dimensional space by reducing KL divergence of distributions of data points in high and low dimensions. For any point i, consider the similarities with all other points as conditional probabilities $P(j|i)$, then we get a distribution of all data points except i. The actual probability is measured as function of pair-distances. 
+$P(j|i) = {{\exp(-|x_i-x_j|^2 / {\sigma^2})} 
+          \over 
+          {\sum_{k\neq i}\exp(-|x_i-x_k|^2 / {\sigma^2})}}$
+For distribution on low-dimensional space, it's almost the same except that no $\sigma$ is involved. we denote it as $Q(j|i)$. the cost function is $\sum_i KL(P_i||Q_i)$. With iterative gradient descent methods, we find a representation in low dimension space. There are other details such as how to decide $\sigma$, refer to original paper.  
+SNE's cost function is non-convex, so in the original paper, a noise is added into gradient, to get effect of simulated annealing, it is hard to train, says the paper. the cost function looks a little complicated, but it's gradient is surprisingly simple. Choosing KL is not just a random decision, because KL is asymmetric and helps keep local structure in low dimension space. 
+
+Then comes t-SNE, 2 improvement, 1)symmetric sne, 2) t-distribution. By symmetric SNE a  joint probability $p(i,j)$ is used instead of conditional probability $p(j|i)$. $p(ij) = \exp(|x_i-x_j|^2) / \sum_{k\neq l} \exp(|x_k-x_l|^2)$, by this means all data point pairs constitute a total big distribution, and a single KL divergence is used as total cost. This reduces the complexities of the algorithm. But in original high dimension space, the joint distribution has a problem for outliers, all the pairs related to the outlier get very low probability, and contributes little to total cost and then their positions is not going to be well determined. so in t-SNE, $[p(i|j) + p(j|i)]/2n$ is used, while in low dimension space, the joint probability is used. the gradient is simpler than SNE. To alliviate the crowding problem, a student-t distribution is used in low-dimension space, (in high dimension space, gaussian is used).
+
+
+
+reducing the tendency to crowd points together.
+
+can be implemented via Barnes-Hut approximation
+
 \end{document}
