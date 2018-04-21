@@ -59,7 +59,7 @@ $$p(t|X,w,\beta) = \prod_n N(t_n|w^t\phi(x_n), \beta^{-1}) $$
 
 maximize the likelihood, or the logarithm of the likelihood, is equal to minimize the sum of squared error, and at last get the same result as the least squares.
 
-(need proof, 05Dec2017)If assume other density distribution, we get different model. e.g. for laplacian noise, $p(\epsilon) = {\frac 1 {2a}} e^{-\frac {|z|} {a}}$, we get model $\hat{x} = argmin_x |ax-y|_1$
+(need proof, 05Dec2017)If assume other density distribution, we get different model. e.g. for Laplacian noise, $p(\epsilon) = {\frac 1 {2a}} e^{-\frac {|z|} {a}}$, we get model $\hat{x} = argmin_x |ax-y|_1$
 
 \section{Bayesian}
 According to Bayesian formula:
@@ -71,8 +71,8 @@ Given that $p(w|\alpha) = N(0,\alpha I)$ (isotropic Gaussian with zero mean), ma
 
 The first part is same as in MLE, and the second part is prior of w, with maximum log probability, the two parts added together as the cost, as in ridge regression.
 
-Q: how to interpret lasso regression with bayesian theory?
-A: 17Dec2017: laplace distribution is defined as
+Q: how to interpret lasso regression with Bayesian theory?
+A: 17Dec2017: Laplace distribution is defined as
 $$f(w|\mu, b) = {1 \over {2b}} \exp (- {|w-\mu| \over b})$$
 $$\log f(w|\mu, b) = \log {1 \over {2b}} - {|w-\mu| \over b}$$
 
@@ -80,7 +80,7 @@ take the logarithm of both sides, we get $(- {|x-\mu| \over b})$, let $\mu = 0$ 
 
 \section {LDA}
 
-It's said, that LDA is equivalent to liner regression, for two classes problems.
+It's said, that LDA is equivalent to liner regression for two classes problems.
 
 $$ P(Y=k|X=x) = \frac {P(X=x|y=k) * P(y=k)}  {\Sigma_l P(X=x|y=l) * P(y=l) }$$
 prior probability: $P(Y=k)$   
@@ -96,7 +96,7 @@ $$log(\pi_k) + {\mu_k x \over \sigma^2} - {\mu_k^2 \over 2 \sigma^2}$$
 we can assign  x the class k for which the above formula is largest.
 
 
-\section{Softmax}
+\section{Soft-max}
 
 softmax is also called normalized exponential.
 $$\mu_k = {exp(\eta_k) \over {1 + \sum_j exp(\eta_j)}}$$
@@ -478,13 +478,13 @@ inference problems can be classified into 3 types: estimation, confidence sets, 
 \subsection{point estimation}
 \begin{itemize}
 \item point estimation\\
-point estimation means give a single best guess of some quantity of interest, i.e. a parameter, a cdf, a pdf, a expected value of random variable. 
+point estimation means give a single best guess of some quantity of interest, i.e. a parameter, a CDF, a PDF, a expected value of random variable. 
 
 
 Estimation of a parameter should converge to true value if we collect more and more data. this is called consistent.
 
 
-point estimation is often contrasted with the interval estimation, i.e. confidence interval in frequentiest inference, or credible intervals in bayesian inference.
+point estimation is often contrasted with the interval estimation, i.e. confidence interval in frequentiest inference, or credible intervals in Bayesian inference.
 
 \item sampling distribution\\
 distribution of a statistic, considered as a random variable. the name of sampling distribution comes from the fact that it depends on a random sample, and so its distribution is derived from the distribution of the sample.
@@ -503,48 +503,45 @@ standard error is the standard deviation of the sampling distribution. the se of
 
  why we use this method? what is the rationale behind it?
  
- we belive if for any function h(x), $\int h(x)f_\theta(x)dx = \int h(x) f_{\theta^*}(x)dx  = E_{\theta^*}[h(x)]$, then $f_\theta(x)$ is a good approximation of  $f_{\theta^*}(x)$. But obviously we cannot test all possible $h(x)$, so we use only polynormals  (according to \textbf{weiersstress approximation theorem}, any continuous function can be arbitrarily well approximated by polynormials), and we choose $x^k$ because any polynormials can be linearly combined by  $x^k$ where $ (k \in N)$. The last problem is what the upper bound of $k$ should we choose. as a rule of thumb, if $\theta \in R^d$, we need d moments.
+ we believe if for any function h(x), $\int h(x)f_\theta(x)dx = \int h(x) f_{\theta^*}(x)dx  = E_{\theta^*}[h(x)]$, then $f_\theta(x)$ is a good approximation of  $f_{\theta^*}(x)$. But obviously we cannot test all possible $h(x)$, so we use only polynomials  (according to \textbf{Weiersstress approximation theorem}, any continuous function can be arbitrarily well approximated by polynomials), and we choose $x^k$ because any polynormials can be linearly combined by  $x^k$ where $ (k \in N)$. The last problem is what the upper bound of $k$ should we choose. as a rule of thumb, if $\theta \in R^d$, we need d moments.
  
- For discrete distributions, say, if there are $r$ possible values, $E=\{x_1,x_2,...x_r\}$, the PMF has $r-1$ unknowns, we could solve PMF with r-1 moment equations and $\sum p(x_i)=1$, this is multivariate linear problem. Written in matrix form we get a vandermonde matrix, which is invertable, and then we are assured a solution. (the determinant of vandermonde matrix is $\sum_{1 \le i < j \le r}(x_i-x_j)$, since x are possible values of a random variable, they are different by difinition, so the determinant is non zero.) Note that this means for any distribution, we can use method of moments to determine its PMF (without any parameter), just by inverting a vandermonde matrix. so in most cases, if we use parameteric model, we need much less moments to estimate the parameters. And also note that here comes the numerical skills, if the inverse of the vandemonde matrix has large \textbf{condition number}, then the esitmated parameter $\theta$ has high variance,i.e. not reliable. The condition number is the largest eigen value of the matrix.
+ For discrete distributions, say, if there are $r$ possible values, $E=\{x_1,x_2,...x_r\}$, the PMF has $r-1$ unknowns, we could solve PMF with r-1 moment equations and $\sum p(x_i)=1$, this is multivariate linear problem. Written in matrix form we get a vandermonde matrix, which is invertible, and then we are assured a solution. (the determinant of vandermonde matrix is $\sum_{1 \le i < j \le r}(x_i-x_j)$, since x are possible values of a random variable, they are different by definition, so the determinant is non zero.) Note that this means for any distribution, we can use method of moments to determine its PMF (without any parameter), just by inverting a Vandermonde matrix. so in most cases, if we use parametric model, we need much less moments to estimate the parameters. And also note that here comes the numerical skills, if the inverse of the Vandermonde matrix has large \textbf{condition number}, then the estimated parameter $\theta$ has high variance,i.e. not reliable. The condition number is the largest eigen value of the matrix.
  
- in one word, if we can accurately estimate moments, then we may be able to recover pdf or pmf, So, how do we esitmate the k-th moment? Given n sample, $\hat{m}_k= (1/n)\sum_{i=1}^n x_i^k$, this is called empirical moments.
+ in one word, if we can accurately estimate moments, then we may be able to recover pdf or pmf, So, how do we estimate the k-th moment? Given n sample, $\hat{m}_k= (1/n)\sum_{i=1}^n x_i^k$, this is called empirical moments.
 
 \subsubsection {MLE}
 
 MLE is introduced by R.A.Fisher in 1912.
 
-minimize the tatal variant distance when we build an estimator is the ultimate target, but it is hard if not impossible to compute it, so we use Kullback Leibler divergence, which has some good properties for our purpose. note that total variant distance is truely a distance metric, while KL is not (so it is called divergence). 
+minimize the total variant distance when we build an estimator is the ultimate target, but it is hard if not impossible to compute it, so we use Kullback-Leibler divergence, which has some good properties for our purpose. note that total variant distance is truly a distance metric, while KL is not (so it is called divergence). 
 
-If we want to esitmate the parameter $\theta^*$ of one distribution P, denoted as $\hat \theta$, the more close the two distribution $P_\theta^*$ and $P_\hat{\theta}$ the better. then how we measure the closedness of two distributions? we use total variant distance, 
-$$TV(P_\theta^*, P_\hat{\theta}) = \max_A{|P_{\theta^*}(A) - P_\hat{\theta}(A)|}$$ 
-where A represent some event. our stratege is to construct an esitmator $$\hat{TV}(P_\theta, P_{\theta^*})$$
+If we want to estimate the parameter $\theta^*$ of one distribution P, denoted as $\hat \theta$, the more close of the two distributions $P_\theta^*$ and $P_{\hat{\theta}}$ the better. So how do we measure the closeness of two distributions? total variant distance, 
+
+$$TV(P_{\theta^*}, P_{\hat{\theta}}) = \max_A{|P_{\theta^*}(A) - P_{\hat{\theta}}(A)|}$$ 
+where A represent some event. our strategy is to construct an estimator $$\hat{TV}(P_\theta, P_{\theta^*})$$
 and then find $$\arg\min_\theta [\hat{TV}(P_\theta, P_{\theta^*})]$$
 
-????????????????????????$\theta^*$????????A??????????????????
-?????KL divergence, ??KL?????????$KL(P,Q) \neq KL(Q,P)$????KL(P,Q)=0??P=Q?
-?????Estimator????KL???????$$\theta$$, $$\arg\min_\theta[KL(P_{\theta^*}, P_\theta)]$$
+Now the problem is we don't know how to construct this expression, wo don't know $\theta^*$, and the space of A is so much big that we don't know how to iterate it neither. so we resort to KL divergence. KL is not a distance metric, but when $KL(P,Q) \to 0$ $Q \to P$. our estimator is now find $\theta$ of $$\min_\theta[KL(P_{\theta^*}, P_\theta)]$$
 
-??KL????
-
+insert KL into formula above
 $$
 KL(P_{\theta^*}, P_\theta) = E_{\theta^*} [\log{P_{\theta^*}(x) \over P_{\theta}(x)} ] = E_{\theta^*}[\log{P_{\theta^*}(x) ] - E_{\theta^*}[\log P_{\theta}(x)}]
 $$
 
-???????, ????????????????????
+the first part is constant, and the second is an expectation that we could extimate!
 
 $$ KL(P_{\theta^*}, P_\theta)  \approx  Constant -  {1 \over n} \sum_{i=1}^N \log P_{\theta}(x_i)$$
 
-??????2??????????
+we need only compute the maximum value of the second part.
 
 $$
 \arg\min_\theta \hat{KL}(P_{\theta^*}, P_\theta)  = \arg\max_\theta \sum_{i=1}^N \log P_{\theta}(x_i) =  \arg\max_\theta \prod_{i=1}^N P_{\theta}(x_i)
 $$
+bingo, you got MLE
 
-????MLE???
+since the second part of KL is cross entropy, we actually did minimization of cross entropy of two distributions.
 
-??KL?????????????????2?????([cross entropy](https://en.wikipedia.org/wiki/Cross_entropy))????????????????????
-
-?: ????: $$\arg\max (\log a+\log b) = \arg\max \log ab = \arg\max ab$$
+last step: $\arg\max (\log a+\log b) = \arg\max \log ab = \arg\max ab$
 
 
 
@@ -555,7 +552,7 @@ For MLE, fisher information gives how sensitive the estimator is to change of $\
 
 Properties of MLE:
 \begin{list}{.}{ }
-	\item it is consistant
+	\item it is consistent
 	\item it is equivariant
 	\item it is asymptotically normal
 	\item it is asymptotically optimal or efficient
@@ -790,8 +787,6 @@ with above result, we can optimize ELBO iteratively w.r.t. $z_j$ for each j.
 \section{SVD}   
 SVD(singular value decomposition) has a relation to Lagrange multipliers theorem. Find the details.   
 \begin{itemize}
-
-
 \item they both uses $\lambda$
 \item SVD can be proved using Lagrange Multipliers theorem, and Weierstrass theorem. (*topics in matrix analysis*, Horn Johnson).
 \item Horn Johnson also discussed the related history.
@@ -888,6 +883,25 @@ scalar matrix: dI is called scalar matrix, a scalar multiple of the identity mat
 	$\beta = 1/\sigma^2$ is called precision
 
 	the sum of a random variables(\textbf{N terms}), which is itself a random variable, is Gaussian, as long as the \textbf{number of terms(N) in the sum} is large enough. (central limit theorem)
+	
+	\subsection{Gamma distribution}
+	Gamma function is generalization of factorial $x!$, defined as 
+	$$ \Gamma(\alpha) = \int_0^{\infty} x^{\alpha-1}e^{-x}dx $$
+	
+	for every positive integer n, $\Gamma(n) = (n-1)!$
+	
+	the times between successive occurrences in a Poisson process have an exponential distribution, which is a special case of Gamma distribution.
+	
+	
+	\subsection{Exponential Distribution}
+	
+	$$
+	f(x|\beta) =
+	\begin{cases} 
+	\beta e^{-\beta x} & x > 0 \\
+	0 & x \leq 0 
+	\end{cases}
+	$$
 	
 	\subsection {random variable}
 	Entropy
@@ -1682,7 +1696,7 @@ $P(j|i) = {{\exp(-|x_i-x_j|^2 / {\sigma^2})}
 For distribution on low-dimensional space, it's almost the same except that no $\sigma$ is involved. we denote it as $Q(j|i)$. the cost function is $\sum_i KL(P_i||Q_i)$. With iterative gradient descent methods, we find a representation in low dimension space. There are other details such as how to decide $\sigma$, refer to original paper.  
 SNE's cost function is non-convex, so in the original paper, a noise is added into gradient, to get effect of simulated annealing, it is hard to train, says the paper. the cost function looks a little complicated, but it's gradient is surprisingly simple. Choosing KL is not just a random decision, because KL is asymmetric and helps keep local structure in low dimension space. 
 
-Then comes t-SNE, 2 improvement, 1)symmetric sne, 2) t-distribution. By symmetric SNE a  joint probability $p(i,j)$ is used instead of conditional probability $p(j|i)$. $p(ij) = \exp(|x_i-x_j|^2) / \sum_{k\neq l} \exp(|x_k-x_l|^2)$, by this means all data point pairs constitute a total big distribution, and a single KL divergence is used as total cost. This reduces the complexities of the algorithm. But in original high dimension space, the joint distribution has a problem for outliers, all the pairs related to the outlier get very low probability, and contributes little to total cost and then their positions is not going to be well determined. so in t-SNE, $[p(i|j) + p(j|i)]/2n$ is used, while in low dimension space, the joint probability is used. the gradient is simpler than SNE. To alliviate the crowding problem, a student-t distribution is used in low-dimension space, (in high dimension space, gaussian is used). student-t distribution has heavier tails, degree 1 is used.
+Then comes t-SNE, 2 improvement, 1)symmetric SNE, 2) t-distribution. By symmetrical SNE a  joint probability $p(i,j)$ is used instead of conditional probability $p(j|i)$. $p(ij) = \exp(|x_i-x_j|^2) / \sum_{k\neq l} \exp(|x_k-x_l|^2)$, by this means all data point pairs constitute a total big distribution, and a single KL divergence is used as total cost. This reduces the complexities of the algorithm. But in original high dimension space, the joint distribution has a problem for outliers, all the pairs related to the out-lier get very low probability, and contributes little to total cost and then their positions is not going to be well determined. so in t-SNE, $[p(i|j) + p(j|i)]/2n$ is used, while in low dimension space, the joint probability is used. the gradient is simpler than SNE. To alleviate the crowding problem, a student-t distribution is used in low-dimension space, (in high dimension space, Gaussian is used). student-t distribution has heavier tails, degree 1 is used.
 
 
 
