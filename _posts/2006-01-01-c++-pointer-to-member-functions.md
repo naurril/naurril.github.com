@@ -92,7 +92,7 @@ int foo(){
 ```
 C++借由虚函数提供了运行时多态特性，虚函数的实现和普通函数有很大的不同。一般编译器都是采用大家都熟悉的v-table (virtual function table)的方式。所有的虚函数地址存在一个函数表里面，类对象中存储该函数表的首地址（vptr_point）。运行时根据this指针、虚函数索引和虚函数表指针找到函数调用地址。
 
-![这里写图片描述](https://img-blog.csdn.net/20180418174521494?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hsaWU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![vptr_point](../../../../assets/vptr_point.png)
 
 因为这些不同，所以成员函数指针碰上虚函数的时候，也需要作特殊的处理，才能正确表现出所期望的虚拟性质。
 ## 多继承
@@ -103,7 +103,7 @@ class B2{};
 class D: public B1, public B2{}
 假设上面三个对象都不涉及到虚函数，D在内存中的典型布局如下图所示（如果有虚函数则多一个vptr指针， 差别不大）：
 
-![这里写图片描述](https://img-blog.csdn.net/20180418174547671?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hsaWU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![vptr_multi_obj](../../../../assets/vptr_multi_obj.png)
 
 现在假设我们经由D对象调用B2的函数，
 D d；
@@ -119,7 +119,7 @@ class D :public B{}; //virtual class
 
 假设B是一个普通的类，没有虚拟成员函数。而D加上了虚拟成员函数。那么D的典型内存布局如下图所示：
 
-![这里写图片描述](https://img-blog.csdn.net/20180418174602727?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hsaWU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![vptr_multi_obj2](../../../../assets/vptr_multi_obj2.png)
 
 因为D引入了vptr指针，而一般的实现都将vptr放在对象的开头，这就导致经由D对象访问B的成员函数的时候，仍然需要进行this指针的调整。
 D d；
@@ -224,7 +224,7 @@ void foo(C *c)
 :00401730 8B01    ; vcall          mov eax, dword ptr [ecx]
 :00401732 FF6004                  jmp [eax+04]
 ```
-![这里写图片描述](https://img-blog.csdn.net/20180418174807638?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3hsaWU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+![ass_foo](../../../../assets/ass_foo.png)
 
 从上面的汇编代码可以看出vcall_addr的用法。00401030, 00401720, 00401730都是vcall_addr的值，其实也就是pmf的值。在调用的地方，我们不能分别出是不是虚函数，所看到的都是一个函数地址。但是在vcall_addr被当成函数地址调用后，进入vcall_addr，就有区别了。00401720, 00401730是两个虚函数的vcall，他们都是先根据this指针，计算出函数地址，然后jmp到真正的函数地址。00401030是C::nv_fun1的真实地址。
 
