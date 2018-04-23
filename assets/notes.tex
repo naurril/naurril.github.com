@@ -515,38 +515,6 @@ MLE is introduced by R.A.Fisher in 1912.
 
 minimize the tatal variant distance when we build an estimator is the ultimate target, but it is hard if not impossible to compute it, so we use Kullback Leibler divergence, which has some good properties for our purpose. note that total variant distance is truely a distance metric, while KL is not (so it is called divergence). 
 
-If we want to esitmate the parameter $\theta^*$ of one distribution P, denoted as $\hat \theta$, the more close the two distribution $P_\theta^*$ and $P_\hat{\theta}$ the better. then how we measure the closedness of two distributions? we use total variant distance, 
-$$TV(P_\theta^*, P_\hat{\theta}) = \max_A{|P_{\theta^*}(A) - P_\hat{\theta}(A)|}$$ 
-where A represent some event. our stratege is to construct an esitmator $$\hat{TV}(P_\theta, P_{\theta^*})$$
-and then find $$\arg\min_\theta [\hat{TV}(P_\theta, P_{\theta^*})]$$
-
-????????????????????????$\theta^*$????????A??????????????????
-?????KL divergence, ??KL?????????$KL(P,Q) \neq KL(Q,P)$????KL(P,Q)=0??P=Q?
-?????Estimator????KL???????$$\theta$$, $$\arg\min_\theta[KL(P_{\theta^*}, P_\theta)]$$
-
-??KL????
-
-$$
-KL(P_{\theta^*}, P_\theta) = E_{\theta^*} [\log{P_{\theta^*}(x) \over P_{\theta}(x)} ] = E_{\theta^*}[\log{P_{\theta^*}(x) ] - E_{\theta^*}[\log P_{\theta}(x)}]
-$$
-
-???????, ????????????????????
-
-$$ KL(P_{\theta^*}, P_\theta)  \approx  Constant -  {1 \over n} \sum_{i=1}^N \log P_{\theta}(x_i)$$
-
-??????2??????????
-
-$$
-\arg\min_\theta \hat{KL}(P_{\theta^*}, P_\theta)  = \arg\max_\theta \sum_{i=1}^N \log P_{\theta}(x_i) =  \arg\max_\theta \prod_{i=1}^N P_{\theta}(x_i)
-$$
-
-????MLE???
-
-??KL?????????????????2?????([cross entropy](https://en.wikipedia.org/wiki/Cross_entropy))????????????????????
-
-?: ????: $$\arg\max (\log a+\log b) = \arg\max \log ab = \arg\max ab$$
-
-
 
 For MLE, fisher information gives how sensitive the estimator is to change of $\theta$ (to be verified). and the variance of first derivative equals to minus expectation of second derivative. (to be verified also, and why is it useful?)
 
