@@ -75,11 +75,19 @@ you don't use index to traverse an array, eliminated out-of-bounds errors in thi
 ## nullptr (7.2.2, 2.2)
 using nullptr instead of 0 or NULL removes confusions between integers and pointers.
 
-## static assertion
+## static assertion (2.4.3.3, 5.4.2)
 ```c++
-static_assert(sizeof(int) >4, "not ok in 32bit system")
+
+struct Udt{
+  static_assert(sizeof(int) >4, "not ok in 32bit system")
+  
+  int a;
+}
+
 ```
 check something in compile time, constexpr canbe used here.
+the most important usage is to check type in generic programming.
+It's not a statement to be run at runtime, so it can be placed where normal statement is not allowed, e.g. in a class.
 
 
 
