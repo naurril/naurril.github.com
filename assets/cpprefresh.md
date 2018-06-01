@@ -90,6 +90,12 @@ the most important usage is to check type in generic programming.
 It's not a statement to be run at runtime, so it can be placed where normal statement is not allowed, e.g. in a class.
 
 
+# Copying Containers
+# Moving Containers
+# Suppressing Operations
+# Variadic Templates
+# Aliases
 
+naked new, naked delete 5.2
 
 
