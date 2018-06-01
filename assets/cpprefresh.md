@@ -3,7 +3,7 @@ c++-11
 
 enum class
 
-```
+```c++
 enum class Color {red, green, yellow};
 Color x{Color::red};
 Color x = red; //error, red not in scope
