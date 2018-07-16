@@ -515,6 +515,7 @@ MLE is introduced by R.A.Fisher in 1912.
 
 minimize the total variant distance when we build an estimator is the ultimate target, but it is hard if not impossible to compute it, so we use Kullback-Leibler divergence, which has some good properties for our purpose. note that total variant distance is truly a distance metric, while KL is not (so it is called divergence). 
 
+
 If we want to estimate the parameter $\theta^*$ of one distribution P, denoted as $\hat \theta$, the more close of the two distributions $P_\theta^*$ and $P_{\hat{\theta}}$ the better. So how do we measure the closeness of two distributions? total variant distance, 
 
 $$TV(P_{\theta^*}, P_{\hat{\theta}}) = \max_A{|P_{\theta^*}(A) - P_{\hat{\theta}}(A)|}$$ 
@@ -542,6 +543,7 @@ bingo, you got MLE
 since the second part of KL is cross entropy, we actually did minimization of cross entropy of two distributions.
 
 last step: $\arg\max (\log a+\log b) = \arg\max \log ab = \arg\max ab$
+
 
 
 
