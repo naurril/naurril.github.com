@@ -466,9 +466,9 @@ just give a big stop lenght, and shrink it slowly. then we can avoid problem of 
 
 \end{itemize}
 
-\section natural gradient
-\section SGD
-\section AMS
+\section {natural gradient}
+\section {SGD}
+\section {AMS}
 
 \chapter{Statistics}
 
@@ -659,12 +659,17 @@ where p(z) is difficult to sample from, but easy to evaluate when z if given. we
 E(f) &= \int f(z)p(z)dz\\
 &= \int f(z){p(z) \over q(z)} q(z) dz \\
 &= E_q[f(z) {p(z) \over q(z)}] \\
-&\approx {1 \over L} \sum_{l=0}^L f(z^{(l)}){p(z^{(l)}) \over q(z^{(l)})}
+&\approx {1 \over L} \sum_{l=0}^L f(z^{(l)}){p(z^{(l)}) \over q(z^{(l)})}\\
+& = \hat{\mu}
 \end{align}
 
 $p(z) / q(z)$ is called likelihood ratio. (note that it is different from the one in 'likelihood ratio policy gradient' in RL)
 
 The importance sampling has two motives: 1) original distribution p(z) is difficult to sample from, or 2) reduce estimation variance. (ref wikipedia.org)
+
+problem: why the estimation variance can be reduced? the variance of the estimator is
+$$ Var(\hat{\mu}) = \int ({f(x)p(x) \over q(x)} - \mu)^2 q(x) dx $$
+it's easy to see that if q = fp/u, then the var is 0! ok but this is useless since we could compute u directly by u = fp/q, why would we do sampling!
 
 \subsection{Noise contrastive estimation}
 
@@ -1389,6 +1394,7 @@ GloVe
 	
 	\item Q-learning
 	\item Sarsa
+	$$Q(S;A) <- Q(S;A) + \alpha [R + \gamma Q(S'; A') - Q(S; A)]$$
 	\item sarsa expected
 	\item n-step bootstrapping
 	
