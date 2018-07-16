@@ -673,6 +673,17 @@ problem: why the estimation variance can be reduced? the variance of the estimat
 $$ Var(\hat{\mu}) = \int ({f(x)p(x) \over q(x)} - \mu)^2 q(x) dx $$
 it's easy to see that if q = fp/u, then the var is 0! ok but this is useless since we could compute u directly by u = fp/q, why would we do sampling!
 
+\textbf{self normalized  importance sampling}
+if p or q are not normalized, use the following formula:
+$$ \tilde{\mu} = {
+   {{1 \over L} \sum_{l=0}^L f(z^{(l)}){p(z^{(l)}) \over q(z^{(l)})} } 
+   \over
+   {{1 \over L} \sum_{l=0}^L {p(z^{(l)}) \over q(z^{(l)})} }
+   }
+$$
+it can be proved that $\tilde{\mu} $
+
+
 \subsection{Noise contrastive estimation}
 
 (used in word embedding?)
