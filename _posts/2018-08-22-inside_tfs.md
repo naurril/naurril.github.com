@@ -26,7 +26,7 @@ commentIssueId: 1
 
 # TFS的架构
 
-![架构图](./tfs_arch.png)
+![架构图](https://github.com/naurril/draft/blob/master/tf/tfs_arch.png)
 
 
 本节简要介绍各模块的主要功能, 后续章节介绍他们相互之间是如何协作的. 
