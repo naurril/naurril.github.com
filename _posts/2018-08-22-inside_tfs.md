@@ -7,7 +7,7 @@ commentIssueId: 1
 ---
 
 
-本文介绍Tensorflow Serving的原理和代码实现, 并提供简要的代码阅读指导. 
+本文介绍tensorflow Serving的原理和代码实现, 并提供简要的代码阅读指导. 
 
 # 如何serve一个模型
 
@@ -92,7 +92,7 @@ ServerCore启动的时候创建AspiredVersionManager, AspiredVersionManager会�
 
 http rest服务启动后, 会监听http post请求, 将请求（json）转换成protobuf格式的消息, 通过serverCore查找对应的模型版本, 获取对应的已加载的模型, 进行运算并返回结果. 
 
-rgpc服务与 http rest服务类似（待补充),不过目前看起来是Sync方式进行处理. 
+rgpc服务与 http rest服务类似. 
 
 # 模型维护
 
@@ -203,7 +203,13 @@ tfs的main默认并没有提供模型配置文件的动态更新, 但是调用``
 
 TFS目前还不支持动态增加平台. 
 
+## 资源管理
 
+TFS目前仅支持内存资源的管理，类ResourceTracker用来跟踪当前Servable消耗的总资源，当有新的Servable需要加载的时候，会计算剩下的资源是否够用, 并预留资源(```BasicManager::ReserveResources```).
+
+```ServerCore.Options.total_model_memory_limit_bytes```控制总资源，默认设置无上限.
+
+SavedModelBundleFactory提供了对TF模型资源的评估方法，简单的将模型文件大小乘1.2倍([代码](https://github.com/tensorflow/serving/blob/master/tensorflow_serving/servables/tensorflow/bundle_factory_util.cc), ```EstimateResourceFromPath```).
 
 # Batching
 Batching是提高服务性能的一个有效办法, 最简单的batching就是把多个单独请求打包到一起, 由TF Session一次运算得出结果. 
@@ -255,3 +261,4 @@ TFS在如下方面做出了性能提升的设计：
 - Fast Model Loading
 - Model Warmup
 - Availability/Resource Proserving Policy
+
